@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>西面駅 ソミョンえき | BUSAN GUIDE</title>
+<style>
+  :root{
+    --white:#ffffff;
+    --pink-bg:#f7d6e7;
+    --pink:#f0a8cf;
+    --navy:#5b6f9e;
+    --ink:#241f2b;
+    --sub:#6b6a72;
+    --card:#ffffff;
+    --border:#e9e5ea;
+    --line1:#f0a233;
+    --line2:#4f8f3d; /* 2号線 グリーン */
+    --hub:#2a2a26;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--pink-bg);
+    color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height:1.7;
+    overflow-x: hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 30px 0;
+    max-width:820px;
+    margin:0 auto;
+    font-size:11px;
+    color:var(--sub);
+    letter-spacing:.05em;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--navy);
+  }
+  .logo svg{width:18px;height:18px;}
+  .back{
+    font-weight:700;color:var(--navy);
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:14px 20px 60px;}
+  .hero{
+    background:var(--white);
+    border:1px solid rgba(91,111,158,.15);
+    border-radius:24px;
+    overflow:hidden;
+    margin-top:14px;
+  }
+  .hero-photo{width:100%;aspect-ratio:16/8;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-body{padding:24px 26px 28px;}
+  .pline{
+    font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;
+    display:inline-block;margin-bottom:10px;
+    background:linear-gradient(90deg, var(--line1) 0%, var(--line1) 46%, var(--line2) 54%, var(--line2) 100%);
+  }
+  h1{font-size:23px;margin:0 0 6px;}
+  .ko{font-size:14px;color:var(--sub);margin:0 0 16px;}
+  .desc{font-size:14.5px;color:var(--ink);margin:0;}
+
+  /* カテゴリーカード */
+  .cats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+    margin-top:32px;
+  }
+  @media (max-width: 480px) {
+    .cats {
+      grid-template-columns:repeat(2, 1fr);
+    }
+  }
+  .ccard{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 6px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    box-shadow:0 4px 0 rgba(0,0,0,.04);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .ccard:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 0 rgba(0,0,0,.08);
+  }
+  .ccard .icon{
+    font-size:24px;
+    line-height:1;
+    margin-bottom:6px;
+  }
+
+  /* アクセス情報ボックス */
+  .notice-box {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(91, 111, 158, 0.4);
+    border-radius: 14px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .notice-box b {
+    color: var(--navy);
+  }
+
+  .backbtn{
+    display:block;text-align:center;margin-top:32px;
+    background:var(--navy);color:#fff;font-weight:700;font-size:13px;
+    padding:14px;border-radius:14px;
+  }
+  footer{
+    background:var(--navy);color:#f2f4f9;padding:34px 20px;
+    text-align:center;font-size:11.5px;
+  }
+
+  /* スライドパネル CSS */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 99;
+  }
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .side-panel {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 100%; max-width: 420px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .side-panel.active {
+    right: 0;
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(91, 111, 158, 0.2);
+  }
+  .panel-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--navy);
+  }
+  .close-btn {
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--navy);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .item-card {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: block;
+  }
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: rgba(91, 111, 158, 0.4);
+  }
+  .item-title-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .item-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+  }
+  .item-rating {
+    font-size: 13px;
+    color: var(--line1);
+    font-weight: 700;
+  }
+  .item-jp {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+  }
+  .item-desc {
+    font-size: 13px;
+    color: var(--sub);
+    margin: 0 0 6px 0;
+    line-height: 1.6;
+  }
+  .item-tip {
+    font-size: 12px;
+    color: var(--ink);
+    background: rgba(91, 111, 158, 0.08);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M4 6h20l12 14-12 14H4V6z" fill="var(--navy)"/></svg>
+    BUSAN GUIDE
+  </div>
+  <a class="back" href="/#map">← 路線図に戻る</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-photo">
+      <img src="https://images.unsplash.com/photo-1596785236414-3b235f4ff58a?w=1200&q=70&auto=format&fit=crop" alt="西面駅">
+    </div>
+    <div class="hero-body">
+      <span class="pline">1号線 × 2号線 ・ 西面(Seomyeon)乗り換えハブ</span>
+      <h1>西面駅（ソミョンえき）</h1>
+      <p class="ko">서면역 · Seomyeon Station</p>
+      <p class="desc"><strong>1号線と2号線が交差する、釜山最大の繁華街</strong><br>
+      <span style="font-size: 13px; color: var(--sub);">屋台グルメ、地下商店街、百貨店、夜遊びまで。どの駅へ行くにもここを通る釜山の中心地</span></p>
+    </div>
+  </div>
+
+  <!-- カテゴリー4つ -->
+  <div class="cats">
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
+      <span class="icon">🍱</span>
+      <span>グルメ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('cafePanel')">
+      <span class="icon">☕</span>
+      <span>カフェ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('sightPanel')">
+      <span class="icon" style="color: #e53e3e;">📍</span>
+      <span>見どころ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('stayPanel')">
+      <span class="icon">🏨</span>
+      <span>宿泊 (ホテル)</span>
+    </a>
+  </div>
+
+  <!-- アクセス情報ボックス -->
+  <div class="notice-box">
+    📍 <b>位置 & アクセス情報 (Location Info)</b><br>
+    ・<b>住所:</b> 釜山広域市 釜山鎮区 中央大路 地下 730<br>
+    ・<b>金海国際空港:</b> リムジンバスで約40分 / タクシーで約30分<br>
+    ・<b>釜山駅:</b> 地下鉄1号線で約10分（乗り換えなし）
+  </div>
+
+  <a class="backbtn" href="/#map">路線図に戻ってほかの駅を見る</a>
+</div>
+
+<footer>
+  BUSAN TRAVEL GUIDE &copy; BUSAN GUIDE TEAM. All Rights Reserved.
+</footer>
+
+<!-- オーバーレイ -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- ============================================== -->
+<!-- 1. グルメ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="foodPanel">
+  <div class="panel-header">
+    <h2>🍱 西面 グルメ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+서면로68번길+33" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">西面 テジクッパ通り</h3><span class="item-rating">豚クッパ</span></div>
+      <p class="item-jp">서면 돼지국밥골목 (釜山のソウルフード)</p>
+      <p class="item-desc">豚骨をじっくり煮込んだ白濁スープのクッパ専門店が軒を連ねる通り。釜山に来たらまず食べたい一杯。</p>
+      <p class="item-tip">💡 ニラだれ（부추무침）とアミの塩辛（새우젓）で自分好みに味を調えるのが地元流。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+서전로10번길+곱창골목" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">西面 コプチャン横丁</h3><span class="item-rating">ホルモン</span></div>
+      <p class="item-jp">서면 곱창골목 (もつ焼き＆ホルモン)</p>
+      <p class="item-desc">香ばしいコプチャン（もつ）を鉄板で焼き上げる店が集まる夜の名所。〆のポックンパ（焼き飯）まで定番。</p>
+      <p class="item-tip">💡 夜になるほど賑わうエリア。2〜3人以上でシェアするのがおすすめです。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+중앙대로680번가길+24" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ナッコプセ（アリの家 周辺）</h3><span class="item-rating">辛口鍋</span></div>
+      <p class="item-jp">낙곱새 (テナガダコ・もつ・エビの激辛鍋)</p>
+      <p class="item-desc">テナガダコ、コプチャン、エビを甘辛いヤンニョムで煮込む釜山発祥の名物鍋。</p>
+      <p class="item-tip">💡 辛さが選べる店が多いので、辛いのが苦手なら注文時に伝えましょう。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. カフェ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="cafePanel">
+  <div class="panel-header">
+    <h2>☕ 西面 カフェ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+전포대로209번길+카페거리" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">田浦カフェ通り（徒歩圏）</h3><span class="item-rating">徒歩10分</span></div>
+      <p class="item-jp">전포카페거리 (個性派カフェが集まるエリア)</p>
+      <p class="item-desc">西面駅から歩いて行ける人気のカフェストリート。ロースタリーから雑貨併設のカフェまで密集しています。</p>
+      <p class="item-tip">💡 地下鉄で一駅ですが、歩いても10分ほど。買い物ついでの散策に最適。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+서면+카페" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">西面 大型チェーンカフェ</h3><span class="item-rating">休憩向き</span></div>
+      <p class="item-jp">서면 카페 (電源・Wi-Fi完備の休憩スポット)</p>
+      <p class="item-desc">駅周辺には席数の多いカフェが多数。移動の合間に荷物を置いて休憩したいときに便利です。</p>
+      <p class="item-tip">💡 週末の午後は満席になりやすいので、時間をずらしての利用が快適。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 3. 見どころ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="sightPanel">
+  <div class="panel-header">
+    <h2>📍 西面 見どころ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+서면+젊음의거리" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">若者の街（ソミョン繁華街）</h3><span class="item-rating">街歩き</span></div>
+      <p class="item-jp">서면 젊음의거리 (ファッション＆ナイトスポット)</p>
+      <p class="item-desc">コスメ、ファッション、飲食店がぎっしり並ぶ釜山一の繁華街。夜遅くまで賑わいが続きます。</p>
+      <p class="item-tip">💡 通りごとに雰囲気が変わるので、地上に出て歩き回るのが楽しいエリア。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+서면지하상가" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">西面 地下商店街</h3><span class="item-rating">ショッピング</span></div>
+      <p class="item-jp">서면지하상가 (プチプラショッピング)</p>
+      <p class="item-desc">駅の改札から直結する巨大な地下商店街。衣類や小物をリーズナブルに買えます。</p>
+      <p class="item-tip">💡 雨の日でも濡れずに移動＆買い物ができるのが最大の強み。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+중앙대로+786+부전시장" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">釜田市場</h3><span class="item-rating">伝統市場</span></div>
+      <p class="item-jp">부전시장 (釜山最大級の在来市場)</p>
+      <p class="item-desc">生鮮食品から乾物、屋台まで並ぶ活気ある伝統市場。地元の日常が見られます。</p>
+      <p class="item-tip">💡 午前中の方が活気があり、屋台グルメの種類も豊富です。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+가야대로+772+롯데백화점+부산본점" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ロッテ百貨店 釜山本店</h3><span class="item-rating">百貨店</span></div>
+      <p class="item-jp">롯데백화점 부산본점 (免税店・屋上庭園)</p>
+      <p class="item-desc">駅直結の大型百貨店。免税フロアやデパ地下グルメ、屋上の庭園まで揃います。</p>
+      <p class="item-tip">💡 免税店利用にはパスポートが必要。受け取りは空港カウンターになります。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 4. 宿泊 パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="stayPanel">
+  <div class="panel-header">
+    <h2>🏨 西面 宿泊 (ホテル)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+가야대로+772+롯데호텔+부산" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ロッテホテル 釜山</h3><span class="item-rating">駅直結</span></div>
+      <p class="item-jp">롯데호텔 부산</p>
+      <p class="item-desc">百貨店と一体になった西面の代表的な大型ホテル。地下鉄駅から雨に濡れずアクセスできます。</p>
+      <p class="item-tip">💡 買い物と移動を同じ建物で完結させたい人に最適。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+중앙대로+777+이비스+앰배서더+부산+시티센터" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">イビス アンバサダー 釜山シティセンター</h3><span class="item-rating">中価格帯</span></div>
+      <p class="item-jp">이비스 앰배서더 부산 시티센터</p>
+      <p class="item-desc">繁華街のど真ん中に立つ使い勝手のよいホテル。観光の拠点としてバランスの取れた一軒。</p>
+      <p class="item-tip">💡 深夜まで出歩いても徒歩で帰れる立地が魅力です。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+부산진구+새싹로+20+토요코인+부산+서면" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">東横INN 釜山西面</h3><span class="item-rating">コスパ</span></div>
+      <p class="item-jp">토요코인 부산 서면</p>
+      <p class="item-desc">日本語対応と無料朝食で日本人旅行者に人気のビジネスホテル。予算重視の旅に。</p>
+      <p class="item-tip">💡 客室はコンパクトなので、大きなスーツケースは広げる場所を確認しておくと安心。</p>
+    </a>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  function openPanel(panelId) {
+    closeAllPanels();
+    document.getElementById(panelId).classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAllPanels() {
+    document.getElementById('foodPanel').classList.remove('active');
+    document.getElementById('cafePanel').classList.remove('active');
+    document.getElementById('sightPanel').classList.remove('active');
+    document.getElementById('stayPanel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>広安駅 クァンアンえき | BUSAN GUIDE</title>
+<style>
+  :root{
+    --white:#ffffff;
+    --pink-bg:#f7d6e7;
+    --pink:#f0a8cf;
+    --navy:#5b6f9e;
+    --ink:#241f2b;
+    --sub:#6b6a72;
+    --card:#ffffff;
+    --border:#e9e5ea;
+    --line1:#f0a233;
+    --line2:#4f8f3d; /* 2号線 グリーン */
+    --hub:#2a2a26;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--pink-bg);
+    color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height:1.7;
+    overflow-x: hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 30px 0;
+    max-width:820px;
+    margin:0 auto;
+    font-size:11px;
+    color:var(--sub);
+    letter-spacing:.05em;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--navy);
+  }
+  .logo svg{width:18px;height:18px;}
+  .back{
+    font-weight:700;color:var(--navy);
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:14px 20px 60px;}
+  .hero{
+    background:var(--white);
+    border:1px solid rgba(91,111,158,.15);
+    border-radius:24px;
+    overflow:hidden;
+    margin-top:14px;
+  }
+  .hero-photo{width:100%;aspect-ratio:16/8;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-body{padding:24px 26px 28px;}
+  .pline{
+    font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;
+    display:inline-block;margin-bottom:10px;background:var(--line2);
+  }
+  h1{font-size:23px;margin:0 0 6px;}
+  .ko{font-size:14px;color:var(--sub);margin:0 0 16px;}
+  .desc{font-size:14.5px;color:var(--ink);margin:0;}
+
+  /* カテゴリーカード */
+  .cats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:8px;
+    margin-top:32px;
+  }
+  @media (max-width: 480px) {
+    .cats {
+      grid-template-columns:repeat(2, 1fr);
+    }
+  }
+  .ccard{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 6px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    box-shadow:0 4px 0 rgba(0,0,0,.04);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .ccard:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 0 rgba(0,0,0,.08);
+  }
+  .ccard .icon{
+    font-size:24px;
+    line-height:1;
+    margin-bottom:6px;
+  }
+
+  /* アクセス情報ボックス */
+  .notice-box {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(91, 111, 158, 0.4);
+    border-radius: 14px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .notice-box b {
+    color: var(--navy);
+  }
+
+  .backbtn{
+    display:block;text-align:center;margin-top:32px;
+    background:var(--navy);color:#fff;font-weight:700;font-size:13px;
+    padding:14px;border-radius:14px;
+  }
+  footer{
+    background:var(--navy);color:#f2f4f9;padding:34px 20px;
+    text-align:center;font-size:11.5px;
+  }
+
+  /* スライドパネル CSS */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 99;
+  }
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .side-panel {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 100%; max-width: 420px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.35); 
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%); 
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .side-panel.active {
+    right: 0; 
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(91, 111, 158, 0.2);
+  }
+  .panel-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--navy);
+  }
+  .close-btn {
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--navy);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .item-card {
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: block; 
+  }
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: rgba(91, 111, 158, 0.4);
+  }
+  .item-title-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .item-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+  }
+  .item-rating {
+    font-size: 13px;
+    color: var(--line1);
+    font-weight: 700;
+  }
+  .item-jp {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+  }
+  .item-desc {
+    font-size: 13px;
+    color: var(--sub);
+    margin: 0 0 6px 0;
+    line-height: 1.6;
+  }
+  .item-tip {
+    font-size: 12px;
+    color: var(--ink);
+    background: rgba(91, 111, 158, 0.08);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M4 6h20l12 14-12 14H4V6z" fill="var(--navy)"/></svg>
+    BUSAN GUIDE
+  </div>
+  <a class="back" href="/#map">← 路線図に戻る</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-photo">
+      <img src="https://images.unsplash.com/photo-1682949599169-670e28fb74d9?w=1200&q=70&auto=format&fit=crop" alt="広安駅">
+    </div>
+    <div class="hero-body">
+      <span class="pline">2号線 ・ 廣安(Gwangan)エリア</span>
+      <h1>広安駅（クァンアンえき）</h1>
+      <p class="ko">광안역 · Gwangan Station</p>
+      <p class="desc"><strong>エメラルドグリーンの海と広安大橋の絶景が広がる街</strong><br>
+      <span style="font-size: 13px; color: var(--sub);">オーシャンビューのカフェ、話題のグルメ、夜景スポットまで楽しめる釜山最高のビーチエリア</span></p>
+    </div>
+  </div>
+
+  <!-- 카테고리 4개 구성 -->
+  <div class="cats">
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
+      <span class="icon">🍱</span>
+      <span>グルメ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('cafePanel')">
+      <span class="icon">☕</span>
+      <span>カフェ</span>
+    </a>
+
+    <!-- 볼거리 아이콘을 빨간색 장소 핀(📍)으로 변경 -->
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('sightPanel')">
+      <span class="icon" style="color: #e53e3e;">📍</span>
+      <span>見どころ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('stayPanel')">
+      <span class="icon">🏨</span>
+      <span>宿泊 (ホテル)</span>
+    </a>
+  </div>
+
+  <!-- アクセス情報ボックス -->
+  <div class="notice-box">
+    📍 <b>位置 & アクセス情報 (Location Info)</b><br>
+    ・<b>住所:</b> 釜山広域市 水営区 水営路 地下575<br>
+    ・<b>金海国際空港:</b> タクシーで約45分 / リムジンバス利用<br>
+    ・<b>釜山駅:</b> 地下鉄1号線 → 西面(ソミョン)駅で2号線に乗り換え約30分
+  </div>
+
+  <a class="backbtn" href="/#map">路線図に戻ってほかの駅を見る</a>
+</div>
+
+<footer>
+  BUSAN TRAVEL GUIDE &copy; BUSAN GUIDE TEAM. All Rights Reserved.
+</footer>
+
+<!-- オーバーレイ -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- ============================================== -->
+<!-- 1. グルメ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="foodPanel">
+  <div class="panel-header">
+    <h2>🍱 広安 グルメ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+민락본동로19번길+16" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">トンソウ 広安店</h3><span class="item-rating">⭐ 4.8</span></div>
+      <p class="item-jp">톤쇼우 광안점 (プレミアムトンカツ)</p>
+      <p class="item-desc">釜山で最も行列ができる超人気熟成豚カツ専門店。肉汁溢れる極上のトンカツが味わえます。</p>
+      <p class="item-tip">💡 CATCHTABLE（캐치테이블）アプリでの pre-waiting（事前順番待ち）が必須です!</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+153" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ハルメチェチョプクッ 広安本店</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">할매재첩국 광안본점 (シジミスープ定食)</p>
+      <p class="item-desc">あっさりとした澄んだシジミスープと豊富なビビンバ用のおかずがセットになった伝統のソウルフード。</p>
+      <p class="item-tip">💡 旅の朝食や酔いざまし（ヘジャン）にぴったりです。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+261" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">チョピルサル豚焼き 広安店</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">초필살돼지구이 광안점 (厚切り豚皮・サムギョプサル)</p>
+      <p class="item-desc">香ばしい豚皮（껍데기）とサムギョプサルが名物の行列店。カリカリモチモチの食感が絶品。</p>
+      <p class="item-tip">💡 夕食時は混雑するため、早めの時間帯の訪問をおすすめします。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. カフェ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="cafePanel">
+  <div class="panel-header">
+    <h2>☕ 広安 カフェ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+237+3층" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">チャソンチェッ (차선책)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">차선책 (オーシャンビュー和風デザートカフェ)</p>
+      <p class="item-desc">広安大橋を一望できる落ち着いたインテリアのカフェ。手作りのガトーケーキや signature ドリンクが人気。</p>
+      <p class="item-tip">💡 窓際席からの広安里ビーチの眺めは絶景です。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+239+7층" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">トゥボクス 広安里店</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">뚜벅스 광안리점 (7階 パノラマビューカフェ)</p>
+      <p class="item-desc">7階の高層から広安里の海を見下ろせる絶景カフェ。旅行者に嬉しい荷物保管サービスも提供。</p>
+      <p class="item-tip">💡 昼の view はもちろん、夜の広安大橋のライトアップ鑑賞にも最適。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 3. 見どころ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="sightPanel">
+  <div class="panel-header">
+    <h2>📍 広安 見どころ</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+219" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">広安里海水浴場</h3><span class="item-rating">⭐ 4.8</span></div>
+      <p class="item-jp">광안리해수욕장 (釜山を代表するビーチ)</p>
+      <p class="item-desc">美しい砂浜と広安大橋のランドマーク景観が広がる人気ビーチ。周辺にはおしゃれなカフェやレストランが多数。</p>
+      <p class="item-tip">💡 夜の散歩やビーチでのひとときに最高のスポットです。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+219" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">広安里 M ドローンライトショー</h3><span class="item-rating">⭐ 4.9</span></div>
+      <p class="item-jp">광안리 M 드론라이트쇼 (毎週土曜日開催)</p>
+      <p class="item-desc">数百台のドローンが夜空を彩る幻想的なライトショー。季節やテーマに合わせた素晴らしい演出が楽しめます。</p>
+      <p class="item-tip">💡 毎週土曜日に2回公演。事前に公演時間をチェックして訪問しましょう！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+민락수변로17번길+56" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">Millac the Market</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">민락더마켓 (複合文化空間)</p>
+      <p class="item-desc">海を眺めながらグルメやショッピング、トレンディなカルチャーを楽しめる大型複合文化空間。</p>
+      <p class="item-tip">💡 大階段に座って海を見ながらテイクアウトグルメを楽しむのがトレンド！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+민락수변로+129" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">民楽水辺公園</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">민락수변공원 (海辺のウォーターフロント公園)</p>
+      <p class="item-desc">広安大橋を間近に臨む海辺の公園。潮風を感じながらのんびりと散策するのに最適です。</p>
+      <p class="item-tip">💡 夜景を見ながら涼むのにぴったりなローカルスポットです。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+수영성로+43" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">水営史蹟公園</h3><span class="item-rating">⭐ 4.3</span></div>
+      <p class="item-jp">수영사적공원 (歴史を感じる緑豊かな公園)</p>
+      <p class="item-desc">朝鮮時代の水軍基地（水営）の跡地。天然記念物の大きなクスノキや歴史的遺物が残る静かな公園。</p>
+      <p class="item-tip">💡 賑やかなビーチから離れて静かに散策したい時におすすめです。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 4. 宿所 パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="stayPanel">
+  <div class="panel-header">
+    <h2>🏨 広安 宿泊 (ホテル)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+229" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ケントホテル 広安里 by Kensington</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">켄트호텔 광안리 바이 켄싱턴</p>
+      <p class="item-desc">広安里ビーチの真向かいに位置するスタイリッシュなホテル。ルーフトップバーからの夜景が人気。</p>
+      <p class="item-tip">💡 ビーチアクセス抜群で、ラウンジサービスも充実しています。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+217" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ホメルス ホテル</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">호메르스 호텔</p>
+      <p class="item-desc">全室から広安大橋のオーシャンビューが楽しめるオーシャンフロントの伝統あるホテル。</p>
+      <p class="item-tip">💡 広い客室と正面に広がる広安大橋のパノラマビューが魅力。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+278번길+42" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">広安里 H-AVENUE ホテル</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">광안리 에이치에비뉴 호텔</p>
+      <p class="item-desc">洗練されたインテリアとテラスからの絶景が自慢のブティックホテル。</p>
+      <p class="item-tip">💡 テラス付きのお部屋から見る広安大橋の夜景が一番のオススメ！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+278번길+42" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">オーシャントゥヘブン ホテル</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">오션투헤븐 호텔</p>
+      <p class="item-desc">清潔でモダンな客室から美しい広安里の海を一望できるコスパ抜群のオーシャンビューホテル。</p>
+      <p class="item-tip">💡 民楽水辺公園やMillac the Marketへのアクセスも良好です。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+민락수변로+175" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ホテル AG405</h3><span class="item-rating">⭐ 4.3</span></div>
+      <p class="item-jp">호텔AG405</p>
+      <p class="item-desc">静かな民楽港側に位置し、モダンなデザインと落ち着いた雰囲気で海を楽しめるブティックホテル。</p>
+      <p class="item-tip">💡 喧騒から離れてゆったりとオーシャンビューを楽しみたい方に最適です。</p>
+    </a>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  function openPanel(panelId) {
+    closeAllPanels(); 
+    document.getElementById(panelId).classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAllPanels() {
+    document.getElementById('foodPanel').classList.remove('active');
+    document.getElementById('cafePanel').classList.remove('active');
+    document.getElementById('sightPanel').classList.remove('active');
+    document.getElementById('stayPanel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+</script>
+
+</body>
+</html>

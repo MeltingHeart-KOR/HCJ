@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>温泉場駅 온천장역 | BUSAN GUIDE</title>
+<style>
+  :root{
+    --white:#ffffff;
+    --pink-bg:#f7d6e7;
+    --pink:#f0a8cf;
+    --navy:#5b6f9e;
+    --ink:#241f2b;
+    --sub:#6b6a72;
+    --card:#ffffff;
+    --border:#e9e5ea;
+    --line1:#f0a233; /* 1号線 オレンジ */
+    --line2:#4f8f3d;
+    --hub:#2a2a26;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--pink-bg);
+    color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height:1.7;
+    overflow-x: hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 30px 0;
+    max-width:820px;
+    margin:0 auto;
+    font-size:11px;
+    color:var(--sub);
+    letter-spacing:.05em;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--navy);
+  }
+  .logo svg{width:18px;height:18px;}
+  .back{
+    font-weight:700;color:var(--navy);
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:14px 20px 60px;}
+  .hero{
+    background:var(--white);
+    border:1px solid rgba(91,111,158,.15);
+    border-radius:24px;
+    overflow:hidden;
+    margin-top:14px;
+  }
+  .hero-photo{width:100%;aspect-ratio:16/8;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-body{padding:24px 26px 28px;}
+  .pline{
+    font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;
+    display:inline-block;margin-bottom:10px;background:var(--line1);
+  }
+  h1{font-size:23px;margin:0 0 6px;}
+  .ko{font-size:14px;color:var(--sub);margin:0 0 16px;}
+  .desc{font-size:14.5px;color:var(--ink);margin:0;}
+
+  /* カテゴリーカード（3つ構成） */
+  .cats{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-top:32px;
+  }
+  .ccard{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:22px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    box-shadow:0 4px 0 rgba(0,0,0,.04);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .ccard:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 0 rgba(0,0,0,.08);
+  }
+  .ccard .icon{
+    font-size:26px;
+    line-height:1;
+    margin-bottom:8px;
+  }
+
+  /* アクセス情報ボックス */
+  .notice-box {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(91, 111, 158, 0.4);
+    border-radius: 14px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .notice-box b {
+    color: var(--navy);
+  }
+
+  .backbtn{
+    display:block;text-align:center;margin-top:32px;
+    background:var(--navy);color:#fff;font-weight:700;font-size:13px;
+    padding:14px;border-radius:14px;
+  }
+  footer{
+    background:var(--navy);color:#f2f4f9;padding:34px 20px;
+    text-align:center;font-size:11.5px;
+  }
+
+  /* スライドパネル CSS */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 99;
+  }
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .side-panel {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 100%; max-width: 420px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.35); 
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%); 
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .side-panel.active {
+    right: 0; 
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(91, 111, 158, 0.2);
+  }
+  .panel-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--navy);
+  }
+  .close-btn {
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--navy);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .item-card {
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: block; 
+  }
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: rgba(91, 111, 158, 0.4);
+  }
+  .item-title-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .item-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+  }
+  .item-rating {
+    font-size: 13px;
+    color: var(--line1);
+    font-weight: 700;
+  }
+  .item-jp {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+  }
+  .item-desc {
+    font-size: 13px;
+    color: var(--sub);
+    margin: 0 0 6px 0;
+    line-height: 1.6;
+  }
+  .item-address {
+    font-size: 12px;
+    color: var(--sub);
+    margin: 0 0 6px 0;
+  }
+  .item-tip {
+    font-size: 12px;
+    color: var(--ink);
+    background: rgba(91, 111, 158, 0.08);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M4 6h20l12 14-12 14H4V6z" fill="var(--navy)"/></svg>
+    BUSAN GUIDE
+  </div>
+  <a class="back" href="/#map">← 路線図に戻る</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="hero-photo"><img src="oncheonjang.jpg" alt="虚心庁（東莱温泉）"></div>
+    <div class="hero-body">
+      <span class="pline">1号線 ・ 温泉場(Oncheonjang)エリア</span>
+      <h1>温泉場駅（オンチョンジャンえき）</h1>
+      <p class="ko">온천장역 · Oncheonjang Station</p>
+      <p class="desc"><strong>歴史ある名湯と豊かな自然に癒やされる街</strong><br>
+      <span style="font-size: 13px; color: var(--sub);">伝統の温泉ホテル、ローカルグルメ、金井山の自然を満喫する釜山癒やしのエリア</span></p>
+    </div>
+  </div>
+
+  <div class="cats">
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('hotelPanel')">
+      <span class="icon">♨️</span>
+      <span>ホテル</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
+      <span class="icon">🍱</span>
+      <span>グルメ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('sightseeingPanel')">
+      <span class="icon">📍</span>
+      <span>見どころ</span>
+    </a>
+  </div>
+
+  <!-- アクセス情報ボックス -->
+  <div class="notice-box">
+    📍 <b>位置 & アクセス情報 (Location Info)</b><br>
+    ・<b>住所:</b> 釜山広域市 東莱区 温泉洞<br>
+    ・<b>西面駅から:</b> 地下鉄1号線で約15分<br>
+    ・<b>釜山駅から:</b> 地下鉄1号線で約25分
+  </div>
+
+  <a class="backbtn" href="/#map">路線図に戻ってほかの駅を見る</a>
+</div>
+
+<footer>
+  BUSAN TRAVEL GUIDE &copy; BUSAN GUIDE TEAM. All Rights Reserved.
+</footer>
+
+<!-- オーバーレイ -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- ============================================== -->
+<!-- 1. ホテル パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="hotelPanel">
+  <div class="panel-header">
+    <h2>♨️ 温泉場 ホテル (3選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/호텔+농심+부산+동래구+금강공원로20번길+23" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">ホテル農心</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">호텔 농심 (Hotel Nongshim)</p>
+      <p class="item-desc">温泉場駅近くを代表する温泉ホテル。客室内に温泉水の浴槽設備を備えているのが特徴。 parkingや朝食などの利便施設が整っており、 familyやカップルに人気。</p>
+      <p class="item-address">📍 釜山広域市 東莱区 金剛公園路20番길 23 (温泉洞 137-7)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/녹천+온천+호텔+부산+동래구+금강공원로26번길+31" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">鹿川温泉ホテル</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">녹천 온천 호텔 (Nokcheon Hotel)</p>
+      <p class="item-desc">温泉場駅から徒歩圏内。温泉浴場と客室を一緒に利用できる伝統スタイルの温泉ホテルで、コスパの良い宿泊施設としてよく挙げられます。</p>
+      <p class="item-address">📍 釜山広域市 東莱区 金剛公園路26番길 31 (温泉洞 96-6)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/대성관+온천+호텔+부산+동래구+금강로124번길+19" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">大星館温泉ホテル</h3><span class="item-rating">⭐ 4.2</span></div>
+      <p class="item-jp">대성관 온천 호텔 (Daesungkwan Hotel)</p>
+      <p class="item-desc">温泉場の中心街に位置する歴史ある温泉旅館スタイルの宿泊施設。温泉風呂の利用が便利で、リーズナブルな meが魅力です。</p>
+      <p class="item-address">📍 釜山広域市 東莱区 金剛路124番길 19</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. グルメ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="foodPanel">
+  <div class="panel-header">
+    <h2>🍱 温泉場 グルメ (8選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/깃발집+부산+동래구+온천동+154-68" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">キッパルチプ</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">깃발집 (伝統海鮮料理店)</p>
+      <p class="item-desc">温泉場駅5番出口から虚心庁方面へ歩くと見える伝統海鮮グルメ店。ムルガイ（カレイ）の水刺身やワタリガニの味噌煮込み・カンジャンケジャンなど、豊富な海鮮料理を楽しめます。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 154-68 (温泉場路107番길 一帯)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/동운반점+부산+동래구+온천동+153-12" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">東雲飯店</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">동운반점 (50年伝統の老舗中華)</p>
+      <p class="item-desc">50年の伝統を誇る中華料理の老舗。チャンポン、ジャージャー麺、酢豚など基本の中華メニューが安定した美味しさで、地元客が長年通う常連店です。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 153-12</p>
+    </a>
+    <a href="https://www.google.com/maps/search/대길숯불갈비+부산+동래구+온천동+94-19" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">テギル炭火カルビ</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">대길숯불갈비 (돼지갈비 숯불구이)</p>
+      <p class="item-desc">豚味付けカルビ、생カルビ、サムギョプサルなどの炭火焼き専門店。ご飯とテンジャンチゲ、 basicなおかず構成が充実しており、 familyや団体利用に最適です。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 94-19</p>
+    </a>
+    <a href="https://www.google.com/maps/search/목화기사식당+부산+동래구+온천1동+186-3" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">モッカ運転手食堂</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">목화기사식당 (韓定食 백반 전문)</p>
+      <p class="item-desc">豚プル백（豚肉炒め定食）、タコ炒め、定食などの韓食白飯スタイルのお店。朝早くから営業しており、地元のランチ・ディナーの定番として長く愛されています。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉1洞 186-3</p>
+    </a>
+    <a href="https://www.google.com/maps/search/동래별장+부산+동래구+온천동+126-1" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">東莱別荘 (韓定食)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">동래별장 (高級韓定食)</p>
+      <p class="item-desc">日本統治時代の別荘をリノベーションした visual豊かな空間で味わう韓定食。ランチ・ディナーのコースで構成され、建築と庭園の雰囲気が独特で特別な日の食事におすすめです。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 126-1</p>
+    </a>
+    <a href="https://www.google.com/maps/search/소문난+초량할매+쭈꾸미+부산+금정구+오시게로+54번길+2" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">噂の草梁ハルメイイダコ</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">소문난 초량할매 쭈꾸미 (イイダコ専門店)</p>
+      <p class="item-desc">イイダコしゃぶしゃぶ、철판味付けイイダコ、石焼きとびっこご飯などのイイダコ専門店。温泉場駅4番出口から徒歩3〜4分と accessが抜群です。</p>
+      <p class="item-address">📍 釜山 金井区 五時開路 54番길 2 カナヴィラ</p>
+    </a>
+    <a href="https://www.google.com/maps/search/금문+부산+동래구+온천장로+119번길+57" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">金門 (Geummun)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">금문 (本格中華料理)</p>
+      <p class="item-desc">ジャージャー麺、チャンポン、酢豚から北京ダックコースまで、多彩な中華料理が楽しめる restaurant。ブレイクタイムがあるため訪問前の確認がおすすめ。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉場路 119番길 57</p>
+    </a>
+    <a href="https://www.google.com/maps/search/만서리이가네막국수+부산+금정구+식물원로+27" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">萬西里李家マッククス</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">만서리이가네막국수 (蕎麦・マッククス)</p>
+      <p class="item-desc">トンチミ（大根の水キムチ）マッククス、オンシミ（ジャガイモ団子）カルグクス、そばスユク（ゆで豚）などのそば・マッククス専門店。장전동植物園路近くに位置します。</p>
+      <p class="item-address">📍 釜山 金井区 植物園路 27 (長箭洞)</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 3. 見どころ パネル -->
+<!-- ============================================== -->
+<div class="side-panel" id="sightseeingPanel">
+  <div class="panel-header">
+    <h2>📍 温泉場 見どころ (6選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/허심청+부산+동래구" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">1. 虚心庁 (Heosimcheong)</h3><span class="item-rating">⭐ 4.7</span></div>
+      <p class="item-jp">허심청 (東莱温泉の象徴的大型スパ)</p>
+      <p class="item-desc">東莱温泉を象徴する大型温泉施設。露天・室内温泉や伝統喫茶店、庭園散策路が調和しており、温泉場観光のメインコースです。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 一帯 (虚心庁路 近く)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/금강공원+부산+동래구" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">2. 金剛公園 & 金剛ロープウェイ</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">금강공원 & 금강케이블카</p>
+      <p class="item-desc">温泉場の裏手に広がる金井山の麓にある park。散策路、池、歴史の痕跡などがあり、ロープウェイに乗れば東莱・温泉場一帯を一望できます。</p>
+      <p class="item-address">📍 釜山 東莱区 金剛公園路 一帯</p>
+    </a>
+    <a href="https://www.google.com/maps/search/부산해양자연사박물관+부산+동래구" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">3. 釜山海洋自然史博物館</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">부산해양자연사박물관</p>
+      <p class="item-desc">恐竜・化石・海洋生物の標本などを exhibitした family向け博物館。温泉場駅から徒歩または短距離移動でアクセス可能です。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 一帯 (金剛公園 近く)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/부산민속예술관+부산+동래구" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">4. 釜山民俗芸術館</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">부산민속예술관</p>
+      <p class="item-desc">伝統公演や民俗資料の展示空間。金剛公園の近くに位置し、文化体験とあわせて訪れるのに適しています。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 一帯 (金剛公園路 近く)</p>
+    </a>
+    <a href="https://www.google.com/maps/search/동래별장+부산+동래구+온천동+126-1" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">5. 東莱別荘 (建築・文化空間)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">동래별장 (歴史的建築物)</p>
+      <p class="item-desc">日本統治時代の別荘を復원・活用した文化空間。松の木や石塔などの原形がよく preservedされており、建築や写真撮影スポットとしても人気です。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉洞 126-1</p>
+    </a>
+    <a href="https://www.google.com/maps/search/온천장+노천족욕탕+부산+동래구" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">6. 露天足湯 & 温泉通り</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">노천족욕탕 & 온천 거리</p>
+      <p class="item-desc">温泉場駅から虚心庁へ続く通りに設置された outdoor足湯施設。気軽に足をつけて温泉の雰囲気を楽しめる無料体験 spotです。</p>
+      <p class="item-address">📍 釜山 東莱区 温泉場路 一帯 (温泉場駅〜虚心庁 区間)</p>
+    </a>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  function openPanel(panelId) {
+    closeAllPanels(); 
+    document.getElementById(panelId).classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAllPanels() {
+    document.getElementById('hotelPanel').classList.remove('active');
+    document.getElementById('foodPanel').classList.remove('active');
+    document.getElementById('sightseeingPanel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+</script>
+
+</body>
+</html>

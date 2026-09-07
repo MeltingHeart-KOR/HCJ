@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>田浦駅 チョンポえき | BUSAN GUIDE</title>
+<style>
+  :root{
+    --white:#ffffff;
+    --pink-bg:#f7d6e7;
+    --pink:#f0a8cf;
+    --navy:#5b6f9e;
+    --ink:#241f2b;
+    --sub:#6b6a72;
+    --card:#ffffff;
+    --border:#e9e5ea;
+    --line1:#f0a233;
+    --line2:#4f8f3d;
+    --hub:#2a2a26;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--pink-bg);
+    color:var(--ink);
+    font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;
+    line-height:1.7;
+    overflow-x: hidden;
+  }
+  a{color:inherit;text-decoration:none;}
+  nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 30px 0;
+    max-width:820px;
+    margin:0 auto;
+    font-size:11px;
+    color:var(--sub);
+    letter-spacing:.05em;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--navy);
+  }
+  .logo svg{width:18px;height:18px;}
+  .back{
+    font-weight:700;color:var(--navy);
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:14px 20px 60px;}
+  .hero{
+    background:var(--white);
+    border:1px solid rgba(91,111,158,.15);
+    border-radius:24px;
+    overflow:hidden;
+    margin-top:14px;
+  }
+  .hero-photo{width:100%;aspect-ratio:16/8;}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .hero-body{padding:24px 26px 28px;}
+  .pline{
+    font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;color:#fff;
+    display:inline-block;margin-bottom:10px;background:var(--line2); /* 2호선 초록색 */
+  }
+  h1{font-size:23px;margin:0 0 6px;}
+  .ko{font-size:14px;color:var(--sub);margin:0 0 16px;}
+  .desc{font-size:14.5px;color:var(--ink);margin:0;}
+
+  /* 카테고리 카드 영역 (3개 구성) */
+  .cats{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-top:32px;
+  }
+  .ccard{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px 8px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:15px;
+    font-weight:700;
+    color:var(--ink);
+    box-shadow:0 4px 0 rgba(0,0,0,.04);
+    transition:transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+  }
+  .ccard:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 0 rgba(0,0,0,.08);
+  }
+  .ccard .icon{
+    font-size:26px;
+    line-height:1;
+    margin-bottom:8px;
+  }
+
+  /* 서면 숙소 안내 박스 */
+  .notice-box {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed rgba(91, 111, 158, 0.4);
+    border-radius: 14px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .notice-box b {
+    color: var(--navy);
+  }
+  .notice-box a {
+    color: var(--line1);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .notice-box a:hover {
+    color: var(--navy);
+  }
+
+  .backbtn{
+    display:block;text-align:center;margin-top:32px;
+    background:var(--navy);color:#fff;font-weight:700;font-size:13px;
+    padding:14px;border-radius:14px;
+  }
+  footer{
+    background:var(--navy);color:#f2f4f9;padding:34px 20px;
+    text-align:center;font-size:11.5px;
+  }
+
+  /* ---------------- 슬라이드 패널 CSS (딥 글래스모피즘) ---------------- */
+  .overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 99;
+  }
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .side-panel {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 100%; max-width: 420px;
+    height: 100vh;
+    
+    background: rgba(255, 255, 255, 0.35); 
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%); 
+    
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    z-index: 100;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    padding: 24px;
+  }
+  .side-panel.active {
+    right: 0; 
+  }
+
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(91, 111, 158, 0.2);
+  }
+  .panel-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: var(--navy);
+  }
+  .close-btn {
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--navy);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .close-btn:hover {
+    opacity: 1;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 40px;
+  }
+  .item-card {
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    display: block; 
+  }
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border-color: rgba(91, 111, 158, 0.4);
+  }
+  .item-title-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .item-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--ink);
+    margin: 0;
+  }
+  .item-rating {
+    font-size: 13px;
+    color: var(--line1);
+    font-weight: 700;
+  }
+  .item-jp {
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+  }
+  .item-desc {
+    font-size: 13px;
+    color: var(--sub);
+    margin: 0 0 6px 0;
+    line-height: 1.6;
+  }
+  .item-tip {
+    font-size: 12px;
+    color: var(--ink);
+    background: rgba(91, 111, 158, 0.08);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin: 0;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 40 40" fill="none"><path d="M4 6h20l12 14-12 14H4V6z" fill="var(--navy)"/></svg>
+    BUSAN GUIDE
+  </div>
+  <a class="back" href="/#map">← 路線図に戻る</a>
+</nav>
+
+<div class="wrap">
+  <div class="hero">
+    <!-- 이미지 전포역 -->
+    <div class="hero-photo"><img src="https://images.unsplash.com/photo-1746529756106-0a8b1a3f168a?w=1200&q=70&auto=format&fit=crop" alt="田浦駅"></div>
+    <div class="hero-body">
+      <span class="pline">2号線 ・ 田浦(Jeonpo)エリア</span>
+      <h1>田浦駅（チョンポえき）</h1>
+      <p class="ko">전포역 · Jeonpo Station</p>
+      <p class="desc"><strong>おしゃれなカフェや雑貨屋が集まるトレンドの発信地</strong><br>
+      <span style="font-size: 13px; color: var(--sub);">カフェ通りで過ごす、とっておきのローカル時間</span></p>
+    </div>
+  </div>
+
+  <div class="cats">
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
+      <span class="icon">🍱</span>
+      <span>グルメ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('cafePanel')">
+      <span class="icon">☕</span>
+      <span>カフェ</span>
+    </a>
+
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('sightseeingPanel')">
+      <span class="icon">📍</span>
+      <span>見所</span>
+    </a>
+  </div>
+
+  <!-- 숙박 서면 유도 안내 박스 추가 -->
+  <div class="notice-box">
+    💡 <b>宿泊について</b><br>
+    田浦(チョンポ)は西面(ソミョン)と隣接しているため、<br>宿泊施設は<a href="seomyeon.html">「西面駅」</a>をご参照ください。
+  </div>
+
+  <a class="backbtn" href="/#map">路線図に戻ってほかの駅を見る</a>
+</div>
+
+<footer>
+  BUSAN TRAVEL GUIDE &copy; BUSAN GUIDE TEAM. All Rights Reserved.
+</footer>
+
+<!-- 오버레이 -->
+<div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
+
+<!-- ============================================== -->
+<!-- 1. 식사(グルメ) 패널 -->
+<!-- ============================================== -->
+<div class="side-panel" id="foodPanel">
+  <div class="panel-header">
+    <h2>🍱 田浦 グルメ (10選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+바오하우스" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">바오하우스 (Bao House)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「ミシュラン・ビブグルマン選出！台湾風バオと麻婆豆腐が話題のアジアン食堂🥢」</p>
+      <p class="item-desc">台湾風バオ（Bao）と麻婆豆腐を、ヒップな田浦の感性でアレンジしたアジアンフュージョン食堂。</p>
+      <p class="item-tip">💡 ふわふわのバオの間にお肉がたっぷり！ナスの挟み揚げは絶対に注文すべき必須メニュー。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+야스마루" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">야스마루 (Yasumaru)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「冷たいネギにゅうめんに分厚い卵焼き！SNSを席巻した『青いネギスープ麺』🍜」</p>
+      <p class="item-desc">冷たいネギスープ麺の上に、分厚くて温かい日本風の卵焼きが乗った「青いネギスープ麺」の美味しいお店。</p>
+      <p class="item-tip">💡 バー（Bar）形式の深夜食堂のような雰囲気！ネギのさっぱり感と卵の甘みが幻想的。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+옥천사세탁" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">옥천사세탁 (Okcheonsa Setak)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「古いクリーニング店をリノベーション！外観とパスタのギャップが魅力のイタリアン🍝」</p>
+      <p class="item-desc">古いクリーニング店の看板と骨組みを活かし、ヴィンテージな洋食店に改装した田浦の象徴的な空間。</p>
+      <p class="item-tip">💡 みすぼらしい外観の中にあるギャップのあるレストラン！感性的な空間で楽しむパスタとリゾット。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+치히로식당" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">치히로식당 (Chihiro Sushi)</h3><span class="item-rating">⭐ 4.7</span></div>
+      <p class="item-jp">「木の温もりあふれる空間！可愛すぎるお寿司のワンプレート定食🍣」</p>
+      <p class="item-desc">ウッドトーンのインテリアの中で、きれいに盛り付けられて出てくるお寿司の定食プレート食堂。</p>
+      <p class="item-tip">💡 可愛らしくセッティングされたお寿司と、食後のキャラクターデザートまで完璧な構成！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=이재모피자+서면별관" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">이재모피자 서면별관</h3><span class="item-rating">⭐ 4.7</span></div>
+      <p class="item-jp">「釜山っ子が愛するソウルフード級のピザ！溢れ出すチーズがたまらない🍕」</p>
+      <p class="item-desc">釜山の人々が最も愛するピザブランド。イムシルチーズが滝のように入るクラストがシグネチャー。</p>
+      <p class="item-tip">💡 田浦駅7番出口のすぐ目の前！香ばしくて塩気のあるチーズの次元が違うピザの聖地。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+굿모닝홍콩" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">굿모닝 홍콩 (Good Morning Hong Kong)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「全浦で香港旅行！？レトロな雰囲気の中で味わうトマトラーメンとフレンチトースト🇭🇰」</p>
+      <p class="item-desc">映画「花様年華」を思い起こさせる、香港の路地裏の感性が漂う茶餐廳（香港式軽食）レストラン。</p>
+      <p class="item-tip">💡 トマトラーメン、牛肉麺と一緒に、練乳がたっぷりかかった香港式フレンチトーストがおすすめ！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+라이스클럽" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">라이스클럽 (Rice Club)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「綺麗で上品な韓国風丼飯！旅の途中でほっとする優しい味わい🍚」</p>
+      <p class="item-desc">きれいで上品な韓国風丼飯とフュージョン釜飯を、モダンなプレーティングで提供するホットプレイス。</p>
+      <p class="item-tip">💡 1人用の定食トレイで提供されて清潔感があり、ピリ辛の韓国風ステーキ丼が人気！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+수수하지만괜찮아" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">수수하지만 굉장해 (Susu)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「分厚くジューシーなとんかつ定食！可愛いキャラクターとデザートも大人気🐶」</p>
+      <p class="item-desc">可愛い犬のキャラクターがシグネチャーの、分厚くて肉汁たっぷりのプレミアム日本式とんかつ専門店。</p>
+      <p class="item-tip">💡 そば、とんかつ、ゆずシャーベットまで充実した定食コースですっきりと提供される。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+코지" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">코지 (Cozy)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「全浦の街並みを眺めながら！韓国風にアレンジされた絶品メキシカンフュージョン🌮」</p>
+      <p class="item-desc">大きな窓から田浦の街並みが見える、洗練されたカジュアルメキシカンフュージョンレストラン。</p>
+      <p class="item-tip">💡 韓国風のサムギョプサルケサディーヤがおすすめ！雰囲気が良く、ビールを一杯添えるのにぴったり。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=류센소+전포점" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">류센소 전포점 (Ryusenso)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「濃密な豚骨スープと韓国風辛口ラーメンが絶品！シックな雰囲気の行列ラーメン店🍜」</p>
+      <p class="item-desc">濃厚な博多式豚骨ラーメンと牡蠣ラーメンで、田浦で最も行列が長い食堂の一つ。</p>
+      <p class="item-tip">💡 シックなブラックトーンのバーテーブル！韓国風の辛口スパイスが加わったラーメンとハイボールの組み合わせが魅力的。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 2. 카페(カフェ) 패널 -->
+<!-- ============================================== -->
+<div class="side-panel" id="cafePanel">
+  <div class="panel-header">
+    <h2>☕ 田浦 カフェ (10選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+빈티지38" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">빈티지38 (Vintage 38)</h3><span class="item-rating">⭐ 4.1</span></div>
+      <p class="item-jp">「24時間営業！タルトの種類が豊富なレトロ工場風大型カフェ」</p>
+      <p class="item-desc">古い工場を改装して作られた田浦カフェ通りの象徴的なランドマーク。高い天井と雄大なインテリアが特徴。</p>
+      <p class="item-tip">💡 24時間営業なので、夜遅くに夜景を楽しみながらデザートパーティーをするのに最適！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+샬롯" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">샬롯 (Charlotte)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「サクサクもちもちのクロッフルが絶品！ウッディで落ち着く欧風カフェ」</p>
+      <p class="item-desc">温かみのあるウッドトーンのアンティーク家具で飾られた、ヨーロッパの感性が漂う雰囲気の美味しいお店。</p>
+      <p class="item-tip">💡 外はサクサク、中はモチモチの「クロッフル」がシグネチャー。アイスクリームを乗せて食べてみて！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+구프" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">구프 (GOOF)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「アナログレコードが流れるヒップな空間！昼はカフェ、夜はバーとして楽しめるLPカフェ」</p>
+      <p class="item-desc">田浦で一番「ヒップな」空間といえば必ず名前が挙がるLPバー兼カフェ。</p>
+      <p class="item-tip">💡 巨大なスピーカーとターンテーブルのアナログなバイブス！昼はバジルミルクシェイク、夜はハイボールがおすすめ。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+도토리다방" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">도토리다방</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「可愛いキャラアートラテと住宅をリノベーションしたレトロ空間」</p>
+      <p class="item-desc">古い2階建ての住宅を温かく改装して作られた、レトロで居心地の良いカフェ。</p>
+      <p class="item-tip">💡 スヌーピーやどんぐりの形をした立体的なクリームアートが乗ったドリンクで「可愛い！」を連発すること間違いなし！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+베르크로스터스" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">베르크 로스터스 (WERK)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「地下のスタイリッシュな空間で味わう本格スペシャルティコーヒー」</p>
+      <p class="item-desc">田浦洞の工具屋通りの地下にあるスペシャルティコーヒーブランド。静かな地下聖堂のような雰囲気。</p>
+      <p class="item-tip">💡 暗い地下で直接注文書に記入しながら豆を選ぶユニークなシステム。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+트래포드" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">트래포드 (Trafford)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「ヨーロッパの街角にいる気分！ロンドン感性のテラスで味わうクリームラテ」</p>
+      <p class="item-desc">田浦の路地裏に突如現れる、イギリス・ロンドンの感性が漂う異国情緒あふれるカフェ。</p>
+      <p class="item-tip">💡 天気の良い日は屋外テラスに座って濃厚なクリームラテを飲みながら、グラビアのような写真を撮ろう！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+페이퍼투콘크리트" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">페이퍼투콘크리트</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「看板のない隠れ家！無機質なコンクリート空間と絶品ウィンナーコーヒー」</p>
+      <p class="item-desc">看板もまともにない古い建物の4階に隠された、秘密のアジトのような空間。</p>
+      <p class="item-tip">💡 荒々しいコンクリートと植物の調和。釜山最高レベルと言われる「ウィンナーコーヒー」は必見。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+이터널선샤인" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">이터널선샤인</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「映画をモチーフにしたエモい空間。窓際で楽しむ塩パンとコーヒーが最高」</p>
+      <p class="item-desc">映画「エターナル・サンシャイン」をモチーフにした、温かくロマンチックな雰囲気のデザートカフェ。</p>
+      <p class="item-tip">💡 片側の壁にはビームプロジェクターで映画が！韓国で大流行中の「塩パン」の美味しいお店でもあるよ。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+희와제과" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">희와제과 (Hee Gwa Ja)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「オープン前から大行列！具だくさんのマンモスパンが名物の大人気ベーカリー」</p>
+      <p class="item-desc">テイクアウトのパン屋に近いが、田浦のデザートを語る上で絶対に外せない場所。</p>
+      <p class="item-tip">💡 パンが焼き上がる時間にできる長い行列！具だくさんのマンモスパンを「オープンラン」で手に入れよう。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+오월생" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">오월생 (May)</h3><span class="item-rating">⭐ 4.3</span></div>
+      <p class="item-jp">「白を基調とした清潔感あふれる空間と可愛い手作り焼菓子」</p>
+      <p class="item-desc">白を基調としたすっきりとしたインテリアに、可愛い手作りの焼き菓子が目を引く場所。</p>
+      <p class="item-tip">💡 きれいにセッティングされたデザート！白いテーブルの上で1:1のインスタ映え写真を撮るのに最適。</p>
+    </a>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 3. 볼거리(見所) 패널 -->
+<!-- ============================================== -->
+<div class="side-panel" id="sightseeingPanel">
+  <div class="panel-header">
+    <h2>📍 田浦 見所 (10選)</h2>
+    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
+  </div>
+  <div class="item-list">
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+오브젝트" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">오브젝트 서면점 (Object)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「韓国の可愛い雑貨が大集合！ステッカーやエコバッグなど、お土産探しはここで決まり🛍️」</p>
+      <p class="item-desc">韓国の新進デザイナーやイラストレーターのグッズがすべて集まっている、田浦最大規模の雑貨セレクトショップ。</p>
+      <p class="item-tip">💡 手帳デコが好きな日本人には天国！可愛いステッカーやマスキングテープ、エコバッグなどのお土産探しに最適。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+마가린상점" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">마가린상점 (Margarine Studio)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「パステルカラーのオリジナル雑貨がずらり！似顔絵イベントも大人気のショップ🎨」</p>
+      <p class="item-desc">パステルカラーの可愛いイラストグッズを販売しており、「プロフィール似顔絵」を描いてくれることで全国的に有名なホットプレイス。</p>
+      <p class="item-tip">💡 作家さんがササッと描いてくれる似顔絵（要予約）や、可愛いマーガリンキャラクターのスマホケースで感性を満喫！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+브라켓테이블" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">브라켓테이블 (Bracket Table)</h3><span class="item-rating">⭐ 4.6</span></div>
+      <p class="item-jp">「ヨーロッパの田舎町のようなキッチン雑貨店！おうちカフェ好き必見🍽️」</p>
+      <p class="item-desc">ヨーロッパの感性が漂う食器、マグカップ、キッチン用品などを販売するライフスタイルショップ。</p>
+      <p class="item-tip">💡 お店全体がヨーロッパの小さなキッチンのよう！おうちカフェを楽しむ観光客が必ず立ち寄る場所。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+러프트맨션" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">러프트맨션 (Luft Mansion)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「韓国女子に大人気！ロゴ入りのエコバッグやアパレルが揃う洗練された空間👕」</p>
+      <p class="item-desc">田浦の狭い階段を上がると現れる、感覚的でヒップなアパレル＆ライフスタイル雑貨店。</p>
+      <p class="item-tip">💡 ロゴ入りのエコバッグやTシャツは韓国の20代女性の間でも大人気！トレンディな「K-ファッション」を感じられる。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+페이퍼가든" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">페이퍼가든 (Paper Garden)</h3><span class="item-rating">⭐ 4.5</span></div>
+      <p class="item-jp">「植物とポスターが織りなす癒やしの空間。おしゃれなインテリア雑貨がいっぱい🌿」</p>
+      <p class="item-desc">ポスター、植物、花瓶など、空間を可愛く飾る小物をメインに扱う爽やかなショップ。</p>
+      <p class="item-tip">💡 緑の植物と感覚的なポスターが調和して心が安らぐ。部屋に飾れる風景ポストカードやファブリックポスターもおすすめ。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+트윈에투알" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">트윈에투알 (Twin Etoile)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「アクセサリーやキャンドル、香水など、センスの良い小物が揃うセレクトショップ💍」</p>
+      <p class="item-desc">アクセサリー、キャンドル、香水などをきれいにキュレーションしたセレクトショップ。</p>
+      <p class="item-tip">💡 友達とお揃いのリングを作ったり、ほのかな香りのディフューザーを試すのにぴったり。価格帯もリーズナブル！</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+하루필름" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">하루필름 전포점 (Haru Film)</h3><span class="item-rating">⭐ 4.3</span></div>
+      <p class="item-jp">「韓国旅行の定番！盛れるフィルターで話題の『韓国プリ（4カット写真）』を体験📸」</p>
+      <p class="item-desc">美白に写るクールトーンフィルターで、韓国で最も人気のあるセルフスタジオ（4カット写真館）。</p>
+      <p class="item-tip">💡 日本のプリクラとは違う、ナチュラルな「韓国式4カット写真」は必須コース！可愛いカチューシャをつけて思い出を残そう。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포+별한스푼" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">별한스푼 (Byul Han Spoon)</h3><span class="item-rating">⭐ 4.4</span></div>
+      <p class="item-jp">「おもちゃ箱をひっくり返したような空間！ヴィンテージトイが溢れるファンタジーな雑貨屋🧸」</p>
+      <p class="item-desc">ディズニー、ジブリ、サンリオなど、ヴィンテージなおもちゃやフィギュアがいっぱいのキダルト（キッズ＋アダルト）雑貨店。</p>
+      <p class="item-tip">💡 童話の中に入ったようなヴィンテージなインテリアが特徴！入り口から可愛くて写真撮影にもぴったり。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포성당" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">전포성당 (Jeonpo Catholic Church)</h3><span class="item-rating">⭐ 4.2</span></div>
+      <p class="item-jp">「全浦カフェ通りのランドマーク！レンガ造りの美しい外観をバックに記念撮影⛪」</p>
+      <p class="item-desc">田浦カフェ通りの中心であり、待ち合わせ場所の役割を果たす赤レンガの聖堂。</p>
+      <p class="item-tip">💡 田浦洞の路地裏探検を始める基準点！晴れた日には青空と赤レンガのコントラストがとても美しく、写真映え抜群。</p>
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&query=전포공구길" target="_blank" class="item-card">
+      <div class="item-title-wrap"><h3 class="item-title">전포공구길 (Jeonpo Tool Street)</h3><span class="item-rating">⭐ 4.3</span></div>
+      <p class="item-jp">「古い工具店とおしゃれなカフェが共存する、レトロポップな路地裏をのんびりお散歩🚶‍♀️」</p>
+      <p class="item-desc">金属音が響く古い金物店や工具街の間に、最近の感性のカフェやご飯屋さんが入り混じる田浦洞ならではの独特な路地裏。</p>
+      <p class="item-tip">💡 古びた工場の外壁の隣に華やかなデザートカフェがある「ニュートロ（New+Retro）」感性は、田浦ならではの圧倒的な魅力！</p>
+    </a>
+  </div>
+</div>
+
+<!-- 자바스크립트 -->
+<script>
+  function openPanel(panelId) {
+    closeAllPanels(); // 열려있는 패널 모두 닫기
+    document.getElementById(panelId).classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAllPanels() {
+    document.getElementById('foodPanel').classList.remove('active');
+    document.getElementById('cafePanel').classList.remove('active');
+    document.getElementById('sightseeingPanel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+</script>
+
+</body>
+</html>
