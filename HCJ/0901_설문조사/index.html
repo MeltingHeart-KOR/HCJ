@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <base target="_top">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Favor - 음료 선호조사</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#554339",
+            "on-background": "#1c1b1b",
+            "on-surface": "#1c1b1b",
+            "primary": "#974806",
+            "secondary": "#ad2b57",
+            "outline": "#887367",
+            "outline-variant": "#dbc2b4",
+            "surface-variant": "#e5e2e1",
+            "background": "#fcf9f8",
+            "surface": "#fcf9f8",
+            "surface-dim": "#dcd9d9",
+            "surface-container-low": "#f6f3f2",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#ebe1da",
+            "error": "#ba1a1a",
+            "on-primary": "#ffffff"
+          },
+          fontFamily: { sans: ["Inter", "Malgun Gothic", "sans-serif"] }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-juice { background: linear-gradient(135deg, #ff9a56 0%, #ff6b95 100%); }
+    .ambient-shadow { box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05); }
+    .primary-glow { box-shadow: 0 4px 14px rgba(255, 107, 149, 0.3); }
+    .material-symbols-outlined { font-family: 'Material Symbols Outlined'; }
+
+    /* ★ 선택 상태 표시: peer-checked 대신 순수 CSS로 처리 (확실하게 동작) */
+    input[type="radio"].sr-only + div {
+      transition: all 0.15s ease;
+    }
+    input[type="radio"].sr-only:checked + div {
+      background: linear-gradient(135deg, #ff9a56 0%, #ff6b95 100%);
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 4px 14px rgba(255, 107, 149, 0.3);
+      transform: scale(1.05);              /* 선택 순간 살짝 커지는 효과 */
+    }
+    /* 선택된 칩 안의 아이콘/이모지도 흰색으로 */
+    input[type="radio"].sr-only:checked + div .material-symbols-outlined {
+      color: #ffffff;
+    }
+
+    /* Range slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 24px; width: 24px;
+      border-radius: 50%;
+      background: #ff9a56;
+      cursor: pointer;
+      margin-top: -10px;
+      box-shadow: 0 2px 6px rgba(255, 154, 86, 0.4);
+      border: 2px solid white;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 6px;
+      cursor: pointer;
+      background: #eae7e7;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pt-20 pb-12 font-sans">
+
+  <!-- Top App Bar -->
+  <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+    <div class="flex items-center justify-center gap-2 px-5 h-16 w-full max-w-[480px] mx-auto">
+      <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">local_drink</span>
+      <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">Favor</span>
+    </div>
+    <div class="w-full h-1.5 bg-tertiary-fixed absolute bottom-0 left-0">
+      <div class="h-full w-1/2 gradient-juice transition-all duration-500" id="progressBar"></div>
+    </div>
+  </header>
+
+  <main class="w-full max-w-[480px] mx-auto px-5 pt-6 flex flex-col gap-6">
+
+    <!-- ============ STEP 1: 기본 정보 ============ -->
+    <div id="infoView" class="flex flex-col gap-6">
+      <div class="text-center space-y-2 pt-4">
+        <h1 class="text-[28px] leading-[34px] font-bold">신제품 음료 선호조사에<br/>참여해 주세요! 🥤</h1>
+        <p class="text-base text-on-surface-variant">기본 정보를 입력해주세요.</p>
+      </div>
+      <div class="flex justify-center items-center gap-2">
+        <div class="w-3 h-3 rounded-full gradient-juice primary-glow"></div>
+        <div class="w-2 h-2 rounded-full bg-surface-variant" id="dot2"></div>
+      </div>
+      <p class="text-center text-sm font-semibold text-on-surface-variant">Step 1 of 2: 기본 정보</p>
+
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow flex flex-col gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold" for="name">이름</label>
+          <input class="w-full border-0 border-b-2 border-outline-variant bg-transparent py-2 focus:ring-0 focus:border-primary transition-colors placeholder:text-outline" id="name" placeholder="이름을 입력하세요" type="text"/>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold" for="age">나이</label>
+          <input class="w-full border-0 border-b-2 border-outline-variant bg-transparent py-2 focus:ring-0 focus:border-primary transition-colors placeholder:text-outline" id="age" placeholder="나이를 입력하세요" type="number" min="1" max="120"/>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-sm font-semibold mb-1">성별</span>
+          <div class="flex gap-3 flex-wrap">
+            <label class="cursor-pointer"><input class="peer sr-only" name="gender" type="radio" value="남성"/><div class="px-6 py-2.5 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">남성</div></label>
+            <label class="cursor-pointer"><input class="peer sr-only" name="gender" type="radio" value="여성"/><div class="px-6 py-2.5 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">여성</div></label>
+            <label class="cursor-pointer"><input class="peer sr-only" name="gender" type="radio" value="기타"/><div class="px-6 py-2.5 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">기타</div></label>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold" for="nationality">국적</label>
+          <input class="w-full border-0 border-b-2 border-outline-variant bg-transparent py-2 focus:ring-0 focus:border-primary transition-colors placeholder:text-outline" id="nationality" placeholder="국적을 입력하세요" type="text"/>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-semibold" for="email">이메일</label>
+          <input class="w-full border-0 border-b-2 border-outline-variant bg-transparent py-2 focus:ring-0 focus:border-primary transition-colors placeholder:text-outline" id="email" placeholder="이메일을 입력하세요" type="email"/>
+        </div>
+      </div>
+
+      <button type="button" id="nextBtn" class="w-full min-h-[56px] rounded-full gradient-juice text-white text-base font-semibold primary-glow hover:opacity-90 active:scale-95 transition-all">확인</button>
+      <p class="text-error text-sm text-center hidden" id="infoError"></p>
+    </div>
+
+    <!-- ============ STEP 2: 선호조사 ============ -->
+    <div id="surveyView" class="hidden flex-col gap-6">
+      <div class="flex justify-center items-center gap-2 pt-4">
+        <div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+        <div class="w-3 h-3 rounded-full gradient-juice primary-glow"></div>
+      </div>
+      <p class="text-center text-sm font-semibold text-on-surface-variant">Step 2 of 2: 음료 선호조사</p>
+
+      <!-- Q1 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-5">1. 평소 선호하는 음료 종류는?</h2>
+        <div class="flex flex-wrap gap-3">
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="커피"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">☕ 커피</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="차(티)"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🍵 차(티)</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="탄산음료"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🥤 탄산음료</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="주스"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🧃 주스</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="스무디"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🍓 스무디</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="drinkType" type="radio" value="에너지드링크"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">⚡ 에너지드링크</div></label>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-5">2. 선호하는 맛은?</h2>
+        <div class="flex flex-wrap gap-3">
+          <label class="cursor-pointer"><input class="peer sr-only" name="taste" type="radio" value="달콤한 맛"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🍯 달콤한 맛</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="taste" type="radio" value="상큼한 맛"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🍋 상큼한 맛</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="taste" type="radio" value="쓴 맛"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🍫 쓴 맛</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="taste" type="radio" value="고소한 맛"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">🌰 고소한 맛</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="taste" type="radio" value="담백한 맛"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">💧 담백한 맛</div></label>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-5">3. 선호하는 온도는?</h2>
+        <div class="grid grid-cols-1 gap-3">
+          <label class="cursor-pointer"><input class="peer sr-only" name="temperature" type="radio" value="차갑게(ICE)"/><div class="flex items-center justify-center gap-2 px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-semibold"><span class="material-symbols-outlined">ac_unit</span>차갑게(ICE)</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="temperature" type="radio" value="따뜻하게(HOT)"/><div class="flex items-center justify-center gap-2 px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-semibold"><span class="material-symbols-outlined">local_fire_department</span>따뜻하게(HOT)</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="temperature" type="radio" value="상관없음"/><div class="flex items-center justify-center gap-2 px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-semibold"><span class="material-symbols-outlined">thumbs_up_down</span>상관없음</div></label>
+        </div>
+      </div>
+
+      <!-- Q4: 당도 슬라이더 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-semibold">4. 당도는 어느 정도가 좋으세요?</h2>
+          <span class="gradient-juice text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center" id="sweetnessValue">3</span>
+        </div>
+        <div class="px-2">
+          <input class="w-full" id="sweetnessSlider" max="5" min="1" type="range" value="3"/>
+          <div class="flex justify-between mt-3 text-on-surface-variant text-xs">
+            <span>전혀 안 달게</span><span>보통</span><span>아주 달게</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q5: 탄산 슬라이더 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-semibold">5. 탄산은 어느 정도가 좋으세요?</h2>
+          <span class="gradient-juice text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center" id="carbonationValue">3</span>
+        </div>
+        <div class="px-2">
+          <input class="w-full" id="carbonationSlider" max="5" min="1" type="range" value="3"/>
+          <div class="flex justify-between mt-3 text-on-surface-variant text-xs">
+            <span>탄산 싫어요</span><span>보통</span><span>강탄산 좋아요</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-5">6. 카페인에 대한 선호는?</h2>
+        <div class="flex flex-col gap-3">
+          <label class="cursor-pointer"><input class="peer sr-only" name="caffeine" type="radio" value="카페인 필요"/><div class="flex items-center px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-medium"><span class="material-symbols-outlined mr-3">bolt</span>카페인 필요 (활력이 필요해요)</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="caffeine" type="radio" value="디카페인 선호"/><div class="flex items-center px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-medium"><span class="material-symbols-outlined mr-3">bedtime</span>디카페인 선호 (민감해요)</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="caffeine" type="radio" value="상관없음"/><div class="flex items-center px-5 py-4 rounded-xl border border-surface-variant text-on-surface-variant text-sm font-medium"><span class="material-symbols-outlined mr-3">horizontal_rule</span>상관없음</div></label>
+        </div>
+      </div>
+
+      <!-- Q7: 구매 빈도 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-5">7. 음료 구매 빈도는?</h2>
+        <div class="flex flex-wrap gap-3">
+          <label class="cursor-pointer"><input class="peer sr-only" name="frequency" type="radio" value="하루 2잔 이상"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">하루 2잔 이상</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="frequency" type="radio" value="하루 1잔"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">하루 1잔</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="frequency" type="radio" value="주 2~3회"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">주 2~3회</div></label>
+          <label class="cursor-pointer"><input class="peer sr-only" name="frequency" type="radio" value="주 1회 이하"/><div class="px-5 py-3 rounded-full border border-surface-variant text-on-surface-variant text-sm font-semibold">주 1회 이하</div></label>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="bg-surface-container-lowest rounded-[16px] p-6 ambient-shadow">
+        <h2 class="text-lg font-semibold mb-4">8. 신제품에 바라는 점 (선택)</h2>
+        <textarea class="w-full bg-surface-container-low border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-primary/30 placeholder:text-on-surface-variant/50 resize-none h-32" id="comment" placeholder="자유롭게 남겨주세요..."></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-4 pt-2">
+        <button type="button" id="prevBtn" class="flex-1 py-4 rounded-full border border-surface-variant bg-surface-container-lowest text-on-surface-variant text-sm font-semibold hover:bg-surface-container-low transition-colors flex items-center justify-center active:scale-95">
+          <span class="material-symbols-outlined mr-2 text-[20px]">arrow_back</span>이전
+        </button>
+        <button type="button" id="submitBtn" class="flex-[2] py-4 rounded-full gradient-juice text-white text-sm font-semibold primary-glow hover:opacity-90 transition-opacity active:scale-95">제출하기</button>
+      </div>
+      <p class="text-error text-sm text-center hidden" id="surveyError"></p>
+    </div>
+
+    <!-- ============ STEP 3: 완료 ============ -->
+    <div id="doneView" class="hidden flex-col items-center justify-center gap-6 pt-12">
+      <div class="bg-surface-container-lowest rounded-[16px] ambient-shadow p-8 w-full flex flex-col items-center text-center">
+        <div class="text-6xl mb-6">🎉</div>
+        <h1 class="text-2xl leading-8 font-semibold mb-4">설문에 참여해 주셔서<br/>감사합니다!</h1>
+        <p class="text-base text-on-surface-variant mb-8">소중한 의견은 신제품 개발에 반영됩니다.</p>
+        <button type="button" id="homeBtn" class="flex items-center justify-center gap-2 bg-surface-dim/60 text-on-background hover:bg-surface-dim rounded-full py-3.5 px-6 transition-colors active:scale-95 duration-200 w-full font-semibold text-sm">
+          <span class="material-symbols-outlined" style="font-size:20px;">arrow_back</span>
+          <span>처음으로 돌아가기</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const infoView = document.getElementById('infoView');
+    const surveyView = document.getElementById('surveyView');
+    const doneView = document.getElementById('doneView');
+    const progressBar = document.getElementById('progressBar');
+    const infoError = document.getElementById('infoError');
+    const surveyError = document.getElementById('surveyError');
+    const submitBtn = document.getElementById('submitBtn');
+    const sweetnessSlider = document.getElementById('sweetnessSlider');
+    const carbonationSlider = document.getElementById('carbonationSlider');
+
+    // 슬라이더 채움 효과 + 값 배지 갱신
+    [['sweetnessSlider', 'sweetnessValue'], ['carbonationSlider', 'carbonationValue']].forEach(function (pair) {
+      const slider = document.getElementById(pair[0]);
+      const badge = document.getElementById(pair[1]);
+      function update() {
+        const pct = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        slider.style.background = 'linear-gradient(to right, #ff9a56 0%, #ff9a56 ' + pct + '%, #eae7e7 ' + pct + '%, #eae7e7 100%)';
+        badge.textContent = slider.value;
+      }
+      slider.addEventListener('input', update);
+      update();
+    });
+
+    // ★ 항목 선택 시 햅틱(진동) 피드백 - 지원 기기(안드로이드)에서만 동작
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (navigator.vibrate) {
+          navigator.vibrate(15);   // 15ms 짧은 진동
+        }
+      });
+    });
+
+    // 슬라이더 조작 완료 시에도 가벼운 진동
+    [sweetnessSlider, carbonationSlider].forEach(function (s) {
+      s.addEventListener('change', function () {
+        if (navigator.vibrate) navigator.vibrate(10);
+      });
+    });
+
+    function getRadio(name) {
+      const el = document.querySelector('input[name="' + name + '"]:checked');
+      return el ? el.value : '';
+    }
+    function showError(el, msg) { el.textContent = msg; el.classList.remove('hidden'); }
+    function hideError(el) { el.classList.add('hidden'); }
+    function show(v) { v.classList.remove('hidden'); v.classList.add('flex'); }
+    function hide(v) { v.classList.add('hidden'); v.classList.remove('flex'); }
+
+    // STEP 1 → STEP 2
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      hideError(infoError);
+      const name = document.getElementById('name').value.trim();
+      const age = document.getElementById('age').value.trim();
+      const gender = getRadio('gender');
+      const nationality = document.getElementById('nationality').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      if (!name || !age || !gender || !nationality || !email) {
+        showError(infoError, '모든 항목을 입력해주세요.'); return;
+      }
+      if (isNaN(age) || Number(age) < 1 || Number(age) > 120) {
+        showError(infoError, '나이는 1~120 사이의 숫자로 입력해주세요.'); return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError(infoError, '올바른 이메일 형식을 입력해주세요.'); return;
+      }
+
+      hide(infoView); show(surveyView);
+      progressBar.style.width = '100%';
+      window.scrollTo(0, 0);
+    });
+
+    // STEP 2 → STEP 1 (입력값 유지)
+    document.getElementById('prevBtn').addEventListener('click', function () {
+      hide(surveyView); show(infoView);
+      progressBar.style.width = '50%';
+      window.scrollTo(0, 0);
+    });
+
+    // 제출
+    submitBtn.addEventListener('click', function () {
+      hideError(surveyError);
+      const data = {
+        name:        document.getElementById('name').value.trim(),
+        age:         document.getElementById('age').value.trim(),
+        gender:      getRadio('gender'),
+        nationality: document.getElementById('nationality').value.trim(),
+        email:       document.getElementById('email').value.trim(),
+        drinkType:   getRadio('drinkType'),
+        taste:       getRadio('taste'),
+        temperature: getRadio('temperature'),
+        sweetness:   sweetnessSlider.value,      // 슬라이더 값 (1~5)
+        carbonation: carbonationSlider.value,    // 슬라이더 값 (1~5)
+        caffeine:    getRadio('caffeine'),
+        frequency:   getRadio('frequency'),
+        comment:     document.getElementById('comment').value.trim()
+      };
+
+      // 슬라이더는 항상 값이 있으므로 검사 대상에서 제외
+      if (!data.drinkType || !data.taste || !data.temperature || !data.caffeine || !data.frequency) {
+        showError(surveyError, '모든 필수 문항에 응답해주세요.'); return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = '전송 중...';
+      submitBtn.classList.add('opacity-50');
+
+      google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onFailure)
+        .submitSurvey(data);
+    });
+
+    function onSuccess(res) {
+      if (res.success) {
+        hide(surveyView); show(doneView);
+        window.scrollTo(0, 0);
+      } else {
+        onFailure({ message: res.error });
+      }
+    }
+
+    function onFailure(err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '제출하기';
+      submitBtn.classList.remove('opacity-50');
+      showError(surveyError, err.message || '오류가 발생했습니다. 다시 시도해주세요.');
+    }
+
+    // 처음으로 (전체 초기화)
+    document.getElementById('homeBtn').addEventListener('click', function () {
+      ['name', 'age', 'nationality', 'email', 'comment'].forEach(function (id) {
+        document.getElementById(id).value = '';
+      });
+      document.querySelectorAll('input[type="radio"]').forEach(function (r) { r.checked = false; });
+      // 슬라이더 초기화
+      [sweetnessSlider, carbonationSlider].forEach(function (s) {
+        s.value = 3;
+        s.dispatchEvent(new Event('input'));
+      });
+      submitBtn.disabled = false;
+      submitBtn.textContent = '제출하기';
+      submitBtn.classList.remove('opacity-50');
+      hide(doneView); show(infoView);
+      progressBar.style.width = '50%';
+      window.scrollTo(0, 0);
+    });
+  </script>
+</body>
+</html>

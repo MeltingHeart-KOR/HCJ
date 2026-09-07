@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>GYEONGJU MT 2박3일</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f6f5f2;
+  color: #22232e;
+  line-height: 1.7;
+}
+
+/* ============================================
+   풀스크린 히어로 — 경주의 밤
+   ============================================ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 560px;
+  background: linear-gradient(180deg,
+    #0b0d2a 0%,
+    #171a45 34%,
+    #35245c 62%,
+    #7a3b56 82%,
+    #c96a3f 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+/* 별 */
+.star {
+  position: absolute; z-index: 1;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: twinkle 4s ease-in-out infinite;
+}
+.s1 { top: 10%; left: 12%; width: 3px; height: 3px; }
+.s2 { top: 18%; left: 34%; width: 2px; height: 2px; animation-delay: 0.9s; }
+.s3 { top: 8%;  left: 58%; width: 3px; height: 3px; animation-delay: 1.7s; }
+.s4 { top: 22%; left: 80%; width: 2px; height: 2px; animation-delay: 2.4s; }
+.s5 { top: 32%; left: 8%;  width: 2px; height: 2px; animation-delay: 3s; }
+.s6 { top: 28%; left: 65%; width: 3px; height: 3px; animation-delay: 1.2s; }
+.s7 { top: 14%; left: 90%; width: 2px; height: 2px; animation-delay: 2s; }
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50%      { opacity: 1; transform: scale(1); box-shadow: 0 0 6px 1px rgba(255,255,255,0.8); }
+}
+
+/* 보름달 */
+.moon {
+  position: absolute; top: 9%; right: 12%; z-index: 1;
+  width: 84px; height: 84px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #fffbe8 0%, #ffe9b0 55%, #f2c66d 100%);
+  box-shadow: 0 0 50px 14px rgba(255,230,160,0.35);
+  animation: moonGlow 6s ease-in-out infinite;
+}
+@keyframes moonGlow {
+  0%, 100% { box-shadow: 0 0 40px 10px rgba(255,230,160,0.3); }
+  50%      { box-shadow: 0 0 70px 22px rgba(255,230,160,0.5); }
+}
+
+/* 첨성대 + 능선 실루엣 */
+.silhouette {
+  position: absolute; bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(1000px, 120%);
+  z-index: 2;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+
+/* 모닥불 글로우 */
+.fire-glow {
+  position: absolute; bottom: 4%; left: 22%; z-index: 3;
+  width: 130px; height: 60px;
+  background: radial-gradient(ellipse at center, rgba(255,150,50,0.55) 0%, transparent 70%);
+  filter: blur(8px);
+  animation: fireFlicker 2.2s ease-in-out infinite;
+}
+@keyframes fireFlicker {
+  0%, 100% { opacity: 0.8; transform: scaleX(1); }
+  40%      { opacity: 1;   transform: scaleX(1.15); }
+  70%      { opacity: 0.65; transform: scaleX(0.9); }
+}
+
+/* 반딧불 */
+.firefly {
+  position: absolute; z-index: 3;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #ffe97a;
+  box-shadow: 0 0 8px 3px rgba(255,233,122,0.6);
+  opacity: 0;
+  animation: fly 9s ease-in-out infinite;
+}
+.f1 { bottom: 18%; left: 18%; }
+.f2 { bottom: 12%; left: 40%; animation-delay: 3s; }
+.f3 { bottom: 22%; left: 70%; animation-delay: 5.5s; }
+.f4 { bottom: 10%; left: 85%; animation-delay: 1.6s; }
+@keyframes fly {
+  0%   { transform: translate(0,0);        opacity: 0; }
+  15%  { opacity: 1; }
+  50%  { transform: translate(30px,-46px); opacity: 0.7; }
+  85%  { opacity: 1; }
+  100% { transform: translate(-16px,-84px); opacity: 0; }
+}
+
+/* 히어로 콘텐츠 */
+.hero-inner {
+  position: relative; z-index: 6;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+}
+.hero-eyebrow {
+  display: inline-block;
+  border: 1px solid rgba(255,201,107,0.55);
+  color: #ffc96b;
+  font-size: 0.78rem;
+  letter-spacing: 0.34em;
+  padding: 6px 16px 6px 20px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+  animation: eyebrowGlow 3s ease-in-out infinite;
+}
+@keyframes eyebrowGlow {
+  0%, 100% { box-shadow: 0 0 6px rgba(255,201,107,0.25); }
+  50%      { box-shadow: 0 0 18px rgba(255,201,107,0.6); }
+}
+.hero-title {
+  font-size: clamp(2.6rem, 10vw, 5.6rem);
+  font-weight: 900;
+  line-height: 1.04;
+  background: linear-gradient(90deg, #ffc96b, #ff8a5c, #ff5e9d, #b78cff, #ffc96b);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: flow 8s linear infinite;
+}
+@keyframes flow {
+  from { background-position: 0% 50%; }
+  to   { background-position: 300% 50%; }
+}
+.hero-sub {
+  margin-top: 14px;
+  color: #e8e3f2;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.hero-sub small { display: block; font-weight: 400; font-size: 0.88rem; color: #b3aecb; margin-top: 4px; }
+.hero-cta { margin-top: 28px; }
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 13px 30px;
+  border-radius: 999px;
+  margin: 6px;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn:active { transform: scale(0.95); }
+.btn--primary {
+  color: #2a1608;
+  background: linear-gradient(90deg, #ffc96b, #ff8a5c);
+  box-shadow: 0 0 22px rgba(255,170,90,0.45);
+}
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 0 34px rgba(255,170,90,0.7); }
+.btn--ghost {
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(4px);
+}
+.btn--ghost:hover { border-color: #ffc96b; color: #ffc96b; }
+
+/* 스크롤 유도 */
+.scroll-hint {
+  position: absolute; bottom: 64px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  color: #d9d2ea;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  animation: hintBob 2s ease-in-out infinite;
+}
+.scroll-hint::after {
+  content: "▼";
+  display: block;
+  margin-top: 4px;
+  color: #ffc96b;
+}
+@keyframes hintBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(8px); }
+}
+
+/* 키워드 티커 */
+.ticker {
+  position: absolute; bottom: 0; left: 0;
+  width: 100%; z-index: 7;
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,201,107,0.3);
+  overflow: hidden;
+  padding: 9px 0;
+}
+.ticker-track { display: flex; width: max-content; animation: tick 24s linear infinite; }
+.ticker span {
+  color: #cbc3de;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  padding: 0 26px;
+  white-space: nowrap;
+}
+.ticker b { color: #ffc96b; font-weight: 700; }
+@keyframes tick {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ============================================
+   내비게이션
+   ============================================ */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(11,13,42,0.88);
+  backdrop-filter: blur(10px);
+  display: flex; justify-content: center; flex-wrap: wrap;
+  padding: 8px 4px;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.35);
+}
+nav a {
+  cursor: pointer;
+  color: #d9d2ea;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 8px 15px;
+  border-radius: 999px;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+}
+nav a:hover { background: rgba(255,201,107,0.16); color: #ffc96b; }
+nav a:active { transform: scale(0.92); }
+
+/* ============================================
+   본문
+   ============================================ */
+.container { max-width: 900px; margin: 0 auto; padding: 44px 20px; }
+
+.section-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 36px 0 22px;
+}
+.section-title em {
+  font-style: normal;
+  background: linear-gradient(90deg, #c96a3f, #ff5e9d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #eae7e0;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 14px rgba(34,35,46,0.05);
+  opacity: 0;
+  transform: translateY(26px);
+}
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.day-chip {
+  display: inline-block;
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  border-radius: 999px;
+  padding: 5px 18px;
+  margin-bottom: 14px;
+}
+.chip-1 { background: linear-gradient(90deg, #ff8a5c, #ff5e9d); }
+.chip-2 { background: linear-gradient(90deg, #7a4fd0, #b78cff); }
+.chip-3 { background: linear-gradient(90deg, #2f9e8f, #57c785); }
+.chip-info { background: linear-gradient(90deg, #4a5578, #22232e); }
+.chip-tip  { background: linear-gradient(90deg, #f9a825, #f57f17); }
+
+.card h3 { font-size: 1.12rem; margin-bottom: 10px; }
+.card h3 small { color: #9a94a8; font-weight: 400; font-size: 0.85rem; margin-left: 6px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+th {
+  background: #f3f0ea;
+  color: #5c5648;
+  text-align: left;
+  padding: 8px 12px;
+  white-space: nowrap;
+}
+td { padding: 9px 12px; border-bottom: 1px solid #f1eee8; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td.t { white-space: nowrap; font-weight: 700; color: #c96a3f; }
+
+ul.plain { padding-left: 20px; }
+ul.plain li { margin-bottom: 7px; font-size: 0.92rem; }
+
+.hl {
+  background: linear-gradient(transparent 62%, #ffe4b8 62%);
+  font-weight: 700;
+}
+
+/* 체크리스트 */
+.check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin-top: 6px; }
+.check-item {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+.check-item:hover { background: #f7f4ee; }
+.check-item input { width: 17px; height: 17px; accent-color: #c96a3f; cursor: pointer; }
+.check-item input:checked + span { text-decoration: line-through; color: #b0a99b; }
+
+.tip-card { background: #fffaf0; border: 1px solid #ffdf9e; }
+
+footer {
+  text-align: center;
+  padding: 32px 16px;
+  background: #0b0d2a;
+  color: #8b86a0;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+}
+footer b {
+  background: linear-gradient(90deg, #ffc96b, #ff5e9d);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 파티클 캔버스 */
+#fx-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; }
+  .card { opacity: 1; transform: none; }
+}
+
+@media (max-width: 640px) {
+  .check-grid { grid-template-columns: 1fr; }
+  nav a { font-size: 0.78rem; padding: 6px 10px; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 7px 8px; }
+  .moon { width: 60px; height: 60px; right: 8%; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx-canvas"></canvas>
+
+<!-- ===== 풀스크린 히어로 ===== -->
+<div class="hero">
+  <span class="star s1"></span><span class="star s2"></span><span class="star s3"></span>
+  <span class="star s4"></span><span class="star s5"></span><span class="star s6"></span>
+  <span class="star s7"></span>
+
+  <div class="moon"></div>
+
+  <!-- 능선 + 첨성대 실루엣 -->
+  <svg class="silhouette" viewBox="0 0 1000 190" preserveAspectRatio="none">
+    <!-- 뒤 능선(왕릉 곡선) -->
+    <path d="M0,190 L0,150 Q120,86 260,138 Q340,166 430,150 Q560,122 680,152 Q800,178 900,146 L1000,158 L1000,190 Z"
+          fill="rgba(20,16,48,0.85)"/>
+    <!-- 첨성대 -->
+    <g fill="#141030">
+      <path d="M488,178 C480,140 478,112 484,92 L516,92 C522,112 520,140 512,178 Z"/>
+      <rect x="478" y="84" width="44" height="10" rx="3"/>
+      <rect x="482" y="74" width="36" height="8" rx="3"/>
+    </g>
+    <!-- 첨성대 창 (불빛) -->
+    <rect x="495" y="118" width="10" height="13" rx="2" fill="#ffc96b">
+      <animate attributeName="opacity" values="1;0.45;1" dur="2.6s" repeatCount="indefinite"/>
+    </rect>
+    <!-- 앞 능선 -->
+    <path d="M0,190 L0,172 Q220,140 420,172 Q640,198 820,168 L1000,180 L1000,190 Z"
+          fill="rgba(10,8,30,0.95)"/>
+  </svg>
+
+  <div class="fire-glow"></div>
+
+  <span class="firefly f1"></span>
+  <span class="firefly f2"></span>
+  <span class="firefly f3"></span>
+  <span class="firefly f4"></span>
+
+  <div class="hero-inner">
+    <span class="hero-eyebrow">2 NIGHTS 3 DAYS · TEAM RETREAT</span>
+    <h1 class="hero-title">GYEONGJU<br>MT</h1>
+    <p class="hero-sub">
+      부산 출발 1시간, 천년의 도시에서 보내는 2박 3일
+      <small>볼거리 · 먹거리 · 바비큐 · 레크리에이션 올인원 가이드</small>
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn--primary" data-target="day1">일정 보기 ▶</a>
+      <a class="btn btn--ghost" data-target="check">✅ 준비물</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">SCROLL</div>
+
+  <div class="ticker">
+    <div class="ticker-track">
+      <span><b>BBQ</b> 바비큐 파티</span>
+      <span><b>HWANGRIDAN</b> 황리단길</span>
+      <span><b>NIGHT</b> 동궁과 월지</span>
+      <span><b>GAME</b> 레크리에이션</span>
+      <span><b>BOMUN</b> 보문호수</span>
+      <span><b>FIRE</b> 불멍 &amp; 야식</span>
+      <span><b>BBQ</b> 바비큐 파티</span>
+      <span><b>HWANGRIDAN</b> 황리단길</span>
+      <span><b>NIGHT</b> 동궁과 월지</span>
+      <span><b>GAME</b> 레크리에이션</span>
+      <span><b>BOMUN</b> 보문호수</span>
+      <span><b>FIRE</b> 불멍 &amp; 야식</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 내비게이션 ===== -->
+<nav>
+  <a data-target="day1">Day 1</a>
+  <a data-target="day2">Day 2</a>
+  <a data-target="day3">Day 3</a>
+  <a data-target="stay">🏠 숙박</a>
+  <a data-target="budget">💰 예산</a>
+  <a data-target="check">✅ 준비물</a>
+</nav>
+
+<div class="container">
+
+  <div class="section-title">🗓️ <em>2박 3일 세부 일정</em></div>
+
+  <!-- Day 1 -->
+  <div class="card" id="day1">
+    <span class="day-chip chip-1">DAY 1 · 이동 &amp; 바비큐</span>
+    <h3>부산 출발 → 황리단길 → 바비큐 파티 <small>첫날 밤 아이스브레이킹</small></h3>
+    <table>
+      <tr><td class="t">10:00</td><td>부산 출발 (노포동 터미널 시외버스 or 렌터카/카풀, 약 1시간)</td></tr>
+      <tr><td class="t">12:00</td><td>점심: <span class="hl">황리단길</span> — 십원빵, 교리김밥, 한우물회, 카페 골라먹기</td></tr>
+      <tr><td class="t">14:00</td><td>대릉원 · 첨성대 · 동궁과 월지 산책 — 단체사진 스팟, 한복 대여 추천 📸</td></tr>
+      <tr><td class="t">17:00</td><td>마트 장보기 (시내 대형마트에서 바비큐 재료 일괄 구매)</td></tr>
+      <tr><td class="t">18:00</td><td>펜션 체크인 → <span class="hl">바비큐 파티</span> 🍖 (인당 예산 약 1.5만원)</td></tr>
+      <tr><td class="t">21:00</td><td>레크리에이션 1부: 아이스브레이킹 (조별 이미지게임, 몸으로 말해요)</td></tr>
+      <tr><td class="t">23:00</td><td>야식 라면 + 자유시간</td></tr>
+    </table>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="card" id="day2">
+    <span class="day-chip chip-2">DAY 2 · 액티비티 &amp; 메인 이벤트</span>
+    <h3>보문호수 → 미션 게임 → 밤샘 레크리에이션 <small>MT의 하이라이트</small></h3>
+    <table>
+      <tr><td class="t">09:30</td><td>해장 아침: 펜션 콩나물국 or 근처 순두부집</td></tr>
+      <tr><td class="t">11:00</td><td>액티비티 택1: <span class="hl">보문호수 자전거/오리배</span> ｜ 경주월드(단체할인) ｜ 불국사·석굴암</td></tr>
+      <tr><td class="t">13:00</td><td>점심: 보문단지 쌈밥거리 — 경주 쌈밥정식 (단체 예약 가능, 인당 1.2~1.5만원)</td></tr>
+      <tr><td class="t">15:00</td><td><span class="hl">황리단길 사진 미션 러닝맨</span> — 조별 미션 사진 찍어오기 (벌칙 필수 😈)</td></tr>
+      <tr><td class="t">18:00</td><td>저녁: 닭볶음탕 or 김치찌개 <span class="hl">조별 요리 대회</span> (꼴찌 조 설거지)</td></tr>
+      <tr><td class="t">20:00</td><td>메인 레크리에이션: 장기자랑 · 마피아 게임 · 술게임 (비음주자용 음료 필수 준비)</td></tr>
+      <tr><td class="t">24:00</td><td>불멍 🔥 + 야식 + 새벽 감성 토크</td></tr>
+    </table>
+  </div>
+
+  <!-- Day 3 -->
+  <div class="card" id="day3">
+    <span class="day-chip chip-3">DAY 3 · 정리 &amp; 귀가</span>
+    <h3>대청소 → 해장 → 부산 복귀 <small>마무리도 깔끔하게</small></h3>
+    <table>
+      <tr><td class="t">10:00</td><td>기상 → 펜션 대청소 &amp; 분리수거 (<span class="hl">보증금 회수 조건</span>인 곳 많음!)</td></tr>
+      <tr><td class="t">11:00</td><td>체크아웃 → 해장 점심: 경주 밀면 or 순두부</td></tr>
+      <tr><td class="t">12:30</td><td>카페에서 단체사진 정리 + MVP 시상 🏆 (소소한 상품)</td></tr>
+      <tr><td class="t">14:00</td><td>부산 출발 → 15:30 도착 해산</td></tr>
+    </table>
+  </div>
+
+  <!-- 숙박 -->
+  <div class="card" id="stay">
+    <span class="day-chip chip-info">STAY · 숙박 가이드</span>
+    <h3>🏠 보문단지 · 천북면 단체 펜션</h3>
+    <ul class="plain">
+      <li>단체 MT 수요가 많은 지역이라 <span class="hl">20~30인 독채 펜션</span>이 흔함</li>
+      <li>필수 체크: ① 바비큐장 ② <span class="hl">소음 허용 여부(MT 가능 명시)</span> ③ 취사도구 ④ 침구 수량 ⑤ 보증금 조건</li>
+      <li>예약: 네이버 지도 "경주 단체펜션" 검색 → 가격·후기 비교 (성수기 주말은 3~4주 전 예약)</li>
+      <li>예산: 비수기 주말 기준 <b>인당 2.5~4만원 / 2박</b></li>
+    </ul>
+  </div>
+
+  <!-- 예산 -->
+  <div class="card" id="budget">
+    <span class="day-chip chip-info">BUDGET · 예산 (20명 기준)</span>
+    <h3>💰 인당 약 11만원 내외</h3>
+    <table>
+      <tr><th>항목</th><th>인당</th></tr>
+      <tr><td>교통 (시외버스 왕복)</td><td>약 1.5만원</td></tr>
+      <tr><td>숙박 2박</td><td>3만원</td></tr>
+      <tr><td>식비 (바비큐 + 외식 4끼 + 야식)</td><td>5만원</td></tr>
+      <tr><td>액티비티 · 기타</td><td>1.5만원</td></tr>
+      <tr><td><b>합계</b></td><td><b>약 11만원</b></td></tr>
+    </table>
+  </div>
+
+  <!-- 준비물 체크리스트 -->
+  <div class="card" id="check">
+    <span class="day-chip chip-tip">CHECKLIST · 준비물</span>
+    <h3>✅ 준비물 체크리스트 <small>탭해서 체크!</small></h3>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox"><span>신분증 (전원 필수)</span></label>
+      <label class="check-item"><input type="checkbox"><span>개인 세면도구 · 수건</span></label>
+      <label class="check-item"><input type="checkbox"><span>여벌 옷 · 슬리퍼</span></label>
+      <label class="check-item"><input type="checkbox"><span>상비약 (소화제·밴드·멀미약)</span></label>
+      <label class="check-item"><input type="checkbox"><span>보조배터리 · 멀티탭</span></label>
+      <label class="check-item"><input type="checkbox"><span>블루투스 스피커</span></label>
+      <label class="check-item"><input type="checkbox"><span>레크리에이션 도구 · 상품</span></label>
+      <label class="check-item"><input type="checkbox"><span>쓰레기봉투 · 지퍼백</span></label>
+      <label class="check-item"><input type="checkbox"><span>숯 · 토치 · 집게 (펜션 확인)</span></label>
+      <label class="check-item"><input type="checkbox"><span>비음주자용 음료</span></label>
+    </div>
+  </div>
+
+  <!-- 대안 -->
+  <div class="card tip-card">
+    <span class="day-chip chip-tip">PLAN B · 대안 코스</span>
+    <h3>🔄 다른 지역이 좋다면</h3>
+    <table>
+      <tr><th>코스</th><th>컨셉</th><th>포인트</th></tr>
+      <tr><td><b>남해 · 사천</b><br>(차 1.5~2h)</td><td>바다 감성 MT</td><td>독일마을, 다랭이마을, 바닷가 펜션 불멍. 차량 필수</td></tr>
+      <tr><td><b>밀양</b><br>(차 1h)</td><td>계곡 물놀이 MT</td><td>여름 한정 최강. 얼음골 계곡 펜션, 물가 저렴</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <b>GYEONGJU MT</b> 2박 3일 · TEAM RETREAT GUIDE 🔥 (v1)
+</footer>
+
+<script>
+// ============================================
+// JS 스크롤 내비게이션 (GAS 샌드박스 대응)
+// ============================================
+document.querySelectorAll('[data-target]').forEach(function (link) {
+  link.addEventListener('click', function () {
+    var target = document.getElementById(this.dataset.target);
+    if (target) {
+      var navHeight = document.querySelector('nav').offsetHeight;
+      var y = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 14;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  });
+});
+
+// ============================================
+// 카드 스크롤 등장
+// ============================================
+(function () {
+  var cards = document.querySelectorAll('.card');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      !('IntersectionObserver' in window)) {
+    cards.forEach(function (c) { c.classList.add('show'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  cards.forEach(function (c) { io.observe(c); });
+})();
+
+// ============================================
+// 히어로 패럴랙스 (rAF 스로틀)
+// ============================================
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  var hero = document.querySelector('.hero');
+  var inner = document.querySelector('.hero-inner');
+  var sil = document.querySelector('.silhouette');
+  var pending = false, ev = null;
+
+  hero.addEventListener('mousemove', function (e) {
+    ev = e;
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () {
+      pending = false;
+      var rect = hero.getBoundingClientRect();
+      var px = (ev.clientX - rect.left) / rect.width - 0.5;
+      var py = (ev.clientY - rect.top) / rect.height - 0.5;
+      inner.style.transform = 'translate(' + (px * 16) + 'px, ' + (py * 10) + 'px)';
+      sil.style.transform = 'translateX(-50%) translate(' + (px * -10) + 'px, ' + (py * -4) + 'px)';
+    });
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', function () {
+    inner.style.transform = '';
+    sil.style.transform = 'translateX(-50%)';
+  });
+})();
+
+// ============================================
+// 클릭 불꽃 파티클 (최적화: 스프라이트 캐싱 + 루프 자동정지)
+// ============================================
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var canvas = document.getElementById('fx-canvas');
+  var ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  var particles = [];
+  var MAX_PARTICLES = 120;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 이모지 스프라이트 사전 렌더링
+  var EMOJIS = ['🔥', '✨', '🏕️', '🍖', '⭐', '🎉'];
+  var SPRITE_SIZE = 48;
+  var SPRITES = EMOJIS.map(function (ch) {
+    var off = document.createElement('canvas');
+    off.width = SPRITE_SIZE; off.height = SPRITE_SIZE;
+    var octx = off.getContext('2d');
+    octx.font = '38px serif';
+    octx.textAlign = 'center';
+    octx.textBaseline = 'middle';
+    octx.fillText(ch, SPRITE_SIZE / 2, SPRITE_SIZE / 2 + 2);
+    return off;
+  });
+
+  var running = false;
+  function ensureLoop() {
+    if (!running) { running = true; requestAnimationFrame(render); }
+  }
+  function addParticle(p) {
+    if (particles.length >= MAX_PARTICLES) particles.shift();
+    particles.push(p);
+    ensureLoop();
+  }
+
+  document.addEventListener('pointerdown', function (e) {
+    // 불꽃 링
+    addParticle({
+      type: 'ring',
+      x: e.clientX, y: e.clientY,
+      r: 4, vr: 3,
+      life: 1, decay: 0.04
+    });
+    // 이모지 버스트
+    var count = 6;
+    for (var i = 0; i < count; i++) {
+      var angle = (Math.PI * 2 / count) * i + Math.random() * 0.5;
+      var speed = 2.4 + Math.random() * 2.8;
+      addParticle({
+        type: 'emoji',
+        sprite: SPRITES[Math.floor(Math.random() * SPRITES.length)],
+        x: e.clientX, y: e.clientY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 2,
+        scale: 0.35 + Math.random() * 0.22,
+        rot: (Math.random() - 0.5) * 0.2,
+        angle: 0,
+        life: 1, decay: 0.024
+      });
+    }
+  }, { passive: true });
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = particles.length - 1; i >= 0; i--) {
+      var p = particles[i];
+      p.life -= p.decay;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+      if (p.type === 'ring') {
+        p.r += p.vr;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,170,90,' + (p.life * 0.75) + ')';
+        ctx.lineWidth = 2.5 * p.life;
+        ctx.stroke();
+      } else {
+        p.vy += 0.12;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.angle += p.rot;
+        var c = Math.cos(p.angle) * p.scale;
+        var s = Math.sin(p.angle) * p.scale;
+        ctx.setTransform(c, s, -s, c, p.x, p.y);
+        ctx.globalAlpha = p.life;
+        ctx.drawImage(p.sprite, -SPRITE_SIZE / 2, -SPRITE_SIZE / 2);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalAlpha = 1;
+      }
+    }
+    if (particles.length === 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      running = false;
+      return;
+    }
+    requestAnimationFrame(render);
+  }
+})();
+</script>
+
+</body>
+</html>

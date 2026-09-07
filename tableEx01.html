@@ -1,0 +1,65 @@
+<!-- https://docs.emmet.io/cheat-sheet/ -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML 테이블 연습</title>
+    <style>
+        /*테이블 테두리를 선명하게 보기 위한 CSS*/
+        table {
+            width: 100%;
+            border-collapse: collapse; /* 테두리 선을 하나로 합침 */
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #444444;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>기본 성적표 테이블</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>국어</th>
+                <th>영어</th>
+                <th>수학</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>김철수</td>
+                <td>85</td>
+                <td>90</td>
+                <td>95</td>
+            </tr>
+            <tr>
+                <td>이영희</td>
+                <td>100</td>
+                <td>80</td>
+                <td>85</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>평균</th>
+                <td>92.5</td>
+                <td>85.0</td>
+                <td>90.0</td>
+            </tr>
+        </tfoot>
+    </table>
+
+</body>
+</html>
+
+<!-- 가로로 합치기 colspan
+세로로 합치지 rowspan -->
