@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d9488" />
+  <title>⚖️ BMI 계산기</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- 헤더 -->
+    <header class="header">
+      <h1 class="title">⚖️ BMI 계산기</h1>
+      <p class="subtitle">키·몸무게·성별로 체질량지수와 목표 체중까지 한 번에</p>
+    </header>
+
+    <!-- 입력 카드 -->
+    <section class="card">
+      <div class="field">
+        <label class="label">성별</label>
+        <div class="chips" id="genderChips">
+          <button type="button" class="chip" data-gender="male">👨 남성</button>
+          <button type="button" class="chip" data-gender="female">👩 여성</button>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="label" for="heightInput">키 (cm)</label>
+          <input type="number" id="heightInput" inputmode="decimal"
+                 placeholder="예: 172.5" min="100" max="250" step="0.1" />
+        </div>
+        <div class="field">
+          <label class="label" for="weightInput">몸무게 (kg)</label>
+          <input type="number" id="weightInput" inputmode="decimal"
+                 placeholder="예: 68.3" min="20" max="300" step="0.1" />
+        </div>
+      </div>
+
+      <button type="button" class="btn-primary" id="calcBtn" disabled>정보를 모두 입력하세요</button>
+    </section>
+
+    <!-- 결과 -->
+    <section class="result hidden" id="resultSection">
+
+      <!-- BMI 메인 -->
+      <div class="card bmi-card">
+        <p class="bmi-label">나의 BMI</p>
+        <p class="bmi-value" id="bmiValue">0.0</p>
+        <p class="bmi-category" id="bmiCategory">—</p>
+
+        <!-- BMI 게이지 -->
+        <div class="gauge">
+          <div class="gauge-bar">
+            <div class="seg seg-under"></div>
+            <div class="seg seg-normal"></div>
+            <div class="seg seg-over"></div>
+            <div class="seg seg-obese"></div>
+            <div class="seg seg-severe"></div>
+            <div class="gauge-marker" id="gaugeMarker">▼</div>
+          </div>
+          <div class="gauge-ticks">
+            <span style="left:20%">18.5</span>
+            <span style="left:44%">23</span>
+            <span style="left:60%">25</span>
+            <span style="left:84%">30</span>
+          </div>
+          <div class="gauge-names">
+            <span>저체중</span><span>정상</span><span>과체중</span><span>비만</span><span>고도비만</span>
+          </div>
+        </div>
+
+        <p class="std-info" id="stdInfo">표준체중: — kg</p>
+      </div>
+
+      <!-- 목표 체중 카드 -->
+      <h2 class="section-title">🎯 표준체중 대비 목표</h2>
+      <div class="targets">
+        <div class="card target-card" id="card90">
+          <p class="target-pct">90%</p>
+          <p class="target-name">날씬 목표</p>
+          <p class="target-weight" id="w90">— kg</p>
+          <p class="target-diff" id="d90">—</p>
+        </div>
+        <div class="card target-card target-main" id="card100">
+          <p class="target-pct">100%</p>
+          <p class="target-name">표준 체중</p>
+          <p class="target-weight" id="w100">— kg</p>
+          <p class="target-diff" id="d100">—</p>
+        </div>
+        <div class="card target-card" id="card110">
+          <p class="target-pct">110%</p>
+          <p class="target-name">허용 상한</p>
+          <p class="target-weight" id="w110">— kg</p>
+          <p class="target-diff" id="d110">—</p>
+        </div>
+      </div>
+
+      <p class="note">※ 표준체중 = 키(m)² × 22(남) / 21(여) · BMI 분류는 대한비만학회(아시아·태평양) 기준입니다.<br>의학적 판단은 반드시 전문의와 상담하세요.</p>
+    </section>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
