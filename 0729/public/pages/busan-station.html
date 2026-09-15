@@ -67,10 +67,10 @@
   .ko{font-size:14px;color:var(--sub);margin:0 0 16px;}
   .desc{font-size:14.5px;color:var(--ink);margin:0;}
 
-  /* カテゴリーカード（4つ構成に拡張） */
+  /* カテゴリーカード（3つ構成） */
   .cats{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(3, 1fr);
     gap:10px;
     margin-top:32px;
   }
@@ -275,14 +275,9 @@
   </div>
 
   <div class="cats">
-    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
-      <span class="icon">🍱</span>
-      <span>グルメ</span>
-    </a>
-
-    <a href="javascript:void(0)" class="ccard" onclick="openPanel('cafePanel')">
-      <span class="icon">☕</span>
-      <span>カフェ</span>
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodCafePanel')">
+      <span class="icon">🍱☕</span>
+      <span>グルメ&カフェ</span>
     </a>
 
     <a href="javascript:void(0)" class="ccard" onclick="openPanel('sightseeingPanel')">
@@ -315,11 +310,11 @@
 <div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
 
 <!-- ============================================== -->
-<!-- 1. グルメ パネル -->
+<!-- 1. 그루메&카페 합친 패널 -->
 <!-- ============================================== -->
-<div class="side-panel" id="foodPanel">
+<div class="side-panel" id="foodCafePanel">
   <div class="panel-header">
-    <h2>🍱 釜山駅 グルメ (10選)</h2>
+    <h2>🍱☕ 釜山駅 グルメ&カフェ</h2>
     <div class="close-btn" onclick="closeAllPanels()">&times;</div>
   </div>
   <div class="item-list">
@@ -383,18 +378,6 @@
       <p class="item-desc">アルミホイルを敷いた鉄板でタレを煮詰めながら焼く、伝統的なデジカルビ（豚カルビ）の名店。</p>
       <p class="item-tip">💡 秘伝のタレがしっかり染み込んだ柔らかいお肉とご飯の相性が最高です。</p>
     </a>
-  </div>
-</div>
-
-<!-- ============================================== -->
-<!-- 2. カフェ パネル -->
-<!-- ============================================== -->
-<div class="side-panel" id="cafePanel">
-  <div class="panel-header">
-    <h2>☕ 釜山駅 カフェ (10選)</h2>
-    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
-  </div>
-  <div class="item-list">
     <a href="https://www.google.com/maps/search/?api=1&query=초량1941" target="_blank" class="item-card">
       <div class="item-title-wrap"><h3 class="item-title">草梁1941</h3><span class="item-rating">⭐ 4.6</span></div>
       <p class="item-jp">초량1941 (レトロな日本家屋リノベカフェ)</p>
@@ -558,8 +541,9 @@
   }
 
   function closeAllPanels() {
-    const panels = document.querySelectorAll('.side-panel');
-    panels.forEach(panel => panel.classList.remove('active'));
+    document.getElementById('foodCafePanel').classList.remove('active');
+    document.getElementById('sightseeingPanel').classList.remove('active');
+    document.getElementById('hotelPanel').classList.remove('active');
     document.getElementById('overlay').classList.remove('active');
     document.body.style.overflow = 'auto';
   }

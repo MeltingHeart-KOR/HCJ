@@ -70,7 +70,7 @@
   /* カテゴリーカード */
   .cats{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(3, 1fr);
     gap:8px;
     margin-top:32px;
   }
@@ -276,16 +276,11 @@
     </div>
   </div>
 
-  <!-- 카테고리 4개 구성 -->
+  <!-- 카테고리 3개 구성 -->
   <div class="cats">
-    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodPanel')">
-      <span class="icon">🍱</span>
-      <span>グルメ</span>
-    </a>
-
-    <a href="javascript:void(0)" class="ccard" onclick="openPanel('cafePanel')">
-      <span class="icon">☕</span>
-      <span>カフェ</span>
+    <a href="javascript:void(0)" class="ccard" onclick="openPanel('foodCafePanel')">
+      <span class="icon">🍱☕</span>
+      <span>グルメ&カフェ</span>
     </a>
 
     <!-- 볼거리 아이콘을 빨간색 장소 핀(📍)으로 변경 -->
@@ -319,11 +314,11 @@
 <div class="overlay" id="overlay" onclick="closeAllPanels()"></div>
 
 <!-- ============================================== -->
-<!-- 1. グルメ パネル -->
+<!-- 1. 그루메&카페 합친 패널 -->
 <!-- ============================================== -->
-<div class="side-panel" id="foodPanel">
+<div class="side-panel" id="foodCafePanel">
   <div class="panel-header">
-    <h2>🍱 広安 グルメ</h2>
+    <h2>🍱☕ 広安 グルメ&カフェ</h2>
     <div class="close-btn" onclick="closeAllPanels()">&times;</div>
   </div>
   <div class="item-list">
@@ -345,18 +340,6 @@
       <p class="item-desc">香ばしい豚皮（껍데기）とサムギョプサルが名物の行列店。カリカリモチモチの食感が絶品。</p>
       <p class="item-tip">💡 夕食時は混雑するため、早めの時間帯の訪問をおすすめします。</p>
     </a>
-  </div>
-</div>
-
-<!-- ============================================== -->
-<!-- 2. カフェ パネル -->
-<!-- ============================================== -->
-<div class="side-panel" id="cafePanel">
-  <div class="panel-header">
-    <h2>☕ 広安 カフェ</h2>
-    <div class="close-btn" onclick="closeAllPanels()">&times;</div>
-  </div>
-  <div class="item-list">
     <a href="https://www.google.com/maps/search/?api=1&query=부산+수영구+광안해변로+237+3층" target="_blank" class="item-card">
       <div class="item-title-wrap"><h3 class="item-title">チャソンチェッ (차선책)</h3><span class="item-rating">⭐ 4.6</span></div>
       <p class="item-jp">차선책 (オーシャンビュー和風デザートカフェ)</p>
@@ -466,8 +449,7 @@
   }
 
   function closeAllPanels() {
-    document.getElementById('foodPanel').classList.remove('active');
-    document.getElementById('cafePanel').classList.remove('active');
+    document.getElementById('foodCafePanel').classList.remove('active');
     document.getElementById('sightPanel').classList.remove('active');
     document.getElementById('stayPanel').classList.remove('active');
     document.getElementById('overlay').classList.remove('active');

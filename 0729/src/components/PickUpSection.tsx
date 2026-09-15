@@ -62,6 +62,7 @@ export default function PickUpSection() {
       <a
         href="#map"
         className="absolute right-7 -bottom-[30px] w-[76px] h-[76px] rounded-full bg-navy text-white text-[10.5px] font-bold flex items-center justify-center text-center leading-tight cursor-pointer"
+        style={{ color: 'white' }}
       >
         MAP
         <br />
