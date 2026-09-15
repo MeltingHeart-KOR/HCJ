@@ -50,4 +50,4 @@ profile-page/
 
 ---
 
-© 나나컴퍼니 · [nanalab.kr](https://nanalab.kr)
+
