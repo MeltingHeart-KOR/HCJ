@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart QR — 나나컴퍼니</title>
+  <link rel="stylesheet" href="./style.css" />
+  <!-- QR 생성 라이브러리 (HTTPS CDN — GitHub Pages에서 정상 동작) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- ▣ 상단 헤더 -->
+  <header class="header">
+    <div class="header__logo">
+      <img src="./logo.png" alt="나나컴퍼니 로고" id="logoImg" />
+      <span class="header__logo-fallback" id="logoFallback" hidden>🐕 나나컴퍼니</span>
+    </div>
+    <h1 class="header__title">Smart&nbsp;QR</h1>
+  </header>
+
+  <!-- ▣ 메인 영역 -->
+  <main class="main" id="main">
+
+    <!-- 안내 문구 -->
+    <section class="hero" id="hero">
+      <p class="hero__emoji">🔳</p>
+      <h2 class="hero__heading">URL을 QR코드로 바꿔드려요!</h2>
+      <p class="hero__sub">주소를 입력하고 <strong>확인</strong>을 누르면 QR코드가 만들어집니다.</p>
+    </section>
+
+    <!-- QR 결과 (처음엔 숨김) -->
+    <section class="result" id="result" hidden>
+      <div class="result__qr-wrap" id="qrWrap" title="클릭하면 JPG로 저장됩니다">
+        <canvas id="qrCanvas"></canvas>
+        <div class="result__badge">💾 클릭해서 JPG 저장</div>
+      </div>
+      <p class="result__url" id="resultUrl"></p>
+    </section>
+
+    <!-- URL 입력 폼 (처음엔 중앙 → 생성 후 하단으로) -->
+    <form class="url-form" id="urlForm" autocomplete="off">
+      <input
+        type="text"
+        id="urlInput"
+        class="url-form__input"
+        placeholder="https://example.com"
+        aria-label="QR코드로 만들 URL"
+        required
+      />
+      <button type="submit" class="url-form__btn">확인</button>
+    </form>
+    <p class="error" id="errorMsg" hidden></p>
+
+  </main>
+
+  <!-- QR 라이브러리 렌더링용 숨김 컨테이너 -->
+  <div id="qrHidden" style="display:none"></div>
+
+  <footer class="footer">© 나나컴퍼니 · Smart QR</footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smart GIF Studio — Free GIF Editor</title>
+<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+
+<header class="header">
+  <a href="https://nanalab.kr" class="logo-link" title="nanalab.kr">
+    <img src="./logo.png" alt="나나컴퍼니" class="logo-img" id="logoImg" />
+    <span class="logo-fallback" id="logoFallback" hidden>🐕 나나컴퍼니</span>
+  </a>
+  <h1 class="site-title">Smart <span class="accent">GIF</span> Studio</h1>
+</header>
+
+<main class="main">
+
+  <!-- ══════════ UPLOAD SCREEN ══════════ -->
+  <section class="upload-screen" id="uploadScreen">
+    <h2 class="hero-title">Free GIF Editor</h2>
+    <p class="hero-desc">
+      Edit GIF files for free! Resizing, downscaling, cropping, FPS adjustment
+      and many more features — all completely free!
+    </p>
+    <p class="hero-privacy">
+      🔒 All data is processed only inside your browser, on your own computer.
+      Nothing is ever sent to an external server, so you can use this tool with
+      complete peace of mind — no risk of data leaks.
+    </p>
+
+    <div class="dropzone" id="dropzone">
+      <div class="dz-icon">🎞️</div>
+      <p class="dz-text">Drag &amp; Drop your GIF file here</p>
+      <p class="dz-sub">or</p>
+      <button class="btn-primary" id="chooseBtn" type="button">📂 Choose File</button>
+      <input type="file" id="fileInput" accept="image/gif" hidden />
+      <p class="dz-hint">One GIF file at a time · processed locally</p>
+    </div>
+  </section>
+
+  <!-- ══════════ EDITOR SCREEN ══════════ -->
+  <section class="editor-screen" id="editorScreen" hidden>
+    <div class="editor-grid">
+
+      <!-- ── Preview panel ── -->
+      <div class="panel preview-panel">
+        <div class="panel-head">
+          <h3 class="panel-title" id="previewTitle">Original GIF</h3>
+          <button class="btn-download" id="downloadBtn" type="button">⬇ Download</button>
+        </div>
+        <div class="preview-stage">
+          <img id="previewImg" alt="GIF preview" />
+        </div>
+        <div class="file-info" id="fileInfo">
+          <div class="info-row"><span class="info-label">File</span><span id="infoName">—</span></div>
+          <div class="info-row"><span class="info-label">Size</span><span id="infoSize">—</span></div>
+          <div class="info-row"><span class="info-label">Resolution</span><span id="infoRes">—</span></div>
+          <div class="info-row"><span class="info-label">Frame Rate</span><span id="infoFps">—</span></div>
+          <div class="info-row"><span class="info-label">Frames</span><span id="infoFrames">—</span></div>
+          <div class="info-row"><span class="info-label">Duration</span><span id="infoDur">—</span></div>
+        </div>
+      </div>
+
+      <!-- ── Editor tools panel ── -->
+      <div class="panel tools-panel">
+
+        <!-- Tools home -->
+        <div class="tool-view" id="view-home">
+          <h3 class="panel-title">🛠️ Editor Tools</h3>
+          <div class="tools-grid">
+            <button class="tool-btn" data-tool="resize"><span class="tb-ico">📐</span>Resize</button>
+            <button class="tool-btn" data-tool="crop"><span class="tb-ico">✂️</span>Crop</button>
+            <button class="tool-btn" data-tool="downsizing"><span class="tb-ico">📉</span>Downsizing</button>
+            <button class="tool-btn" data-tool="convert"><span class="tb-ico">🔄</span>Format Convert</button>
+            <button class="tool-btn" data-tool="rotate"><span class="tb-ico">🔃</span>Rotate</button>
+            <button class="tool-btn" data-tool="optimize"><span class="tb-ico">⚡</span>Optimize</button>
+            <button class="tool-btn" data-tool="reverse"><span class="tb-ico">⏪</span>Reverse</button>
+            <button class="tool-btn" data-tool="speed"><span class="tb-ico">🐇</span>Speed</button>
+            <button class="tool-btn" data-tool="cut"><span class="tb-ico">🎬</span>Cut</button>
+          </div>
+          <button class="btn-another" id="anotherBtn" type="button">📂 Choose Another File</button>
+        </div>
+
+        <!-- Resize -->
+        <div class="tool-view" id="view-resize" hidden>
+          <h3 class="panel-title">📐 Resize</h3>
+          <div class="slider-block">
+            <div class="slider-row">
+              <span class="axis-ico">↔ X</span>
+              <input type="range" id="resizeX" class="slider" />
+              <span class="slider-val" id="resizeXVal">0</span>
+            </div>
+            <div class="lock-row">
+              <button class="lock-btn locked" id="lockBtn" type="button" title="Keep aspect ratio">🔒</button>
+            </div>
+            <div class="slider-row">
+              <span class="axis-ico">↕ Y</span>
+              <input type="range" id="resizeY" class="slider" />
+              <span class="slider-val" id="resizeYVal">0</span>
+            </div>
+          </div>
+          <p class="tool-hint" id="resizeHint">—</p>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goResize" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Crop -->
+        <div class="tool-view" id="view-crop" hidden>
+          <h3 class="panel-title">✂️ Crop</h3>
+          <p class="tool-label">Target ratio</p>
+          <div class="ratio-grid" id="cropRatios">
+            <button class="ratio-btn active" data-ratio="1:1" type="button">1:1</button>
+            <button class="ratio-btn" data-ratio="4:3" type="button">4:3</button>
+            <button class="ratio-btn" data-ratio="3:4" type="button">3:4</button>
+            <button class="ratio-btn" data-ratio="16:9" type="button">16:9</button>
+            <button class="ratio-btn" data-ratio="9:16" type="button">9:16</button>
+          </div>
+          <p class="tool-label">Mode</p>
+          <div class="mode-row">
+            <label class="mode-opt"><input type="radio" name="cropMode" value="pad" checked />
+              🖼️ Pad <small>fill empty space with color</small></label>
+            <label class="mode-opt"><input type="radio" name="cropMode" value="zoom" />
+              🔍 Zoom <small>enlarge &amp; crop, no empty space</small></label>
+          </div>
+          <div class="pad-color-row" id="padColorRow">
+            <span class="tool-label">Fill color</span>
+            <input type="color" id="cropPadColor" value="#ffffff" />
+          </div>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goCrop" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Downsizing -->
+        <div class="tool-view" id="view-downsizing" hidden>
+          <h3 class="panel-title">📉 Downsizing</h3>
+          <label class="check-opt"><input type="checkbox" id="dsScale" checked />
+            Reduce dimensions
+            <span class="inline-slider"><input type="range" id="dsScaleVal" min="25" max="90" value="70" />
+            <b id="dsScaleShow">70%</b></span></label>
+          <label class="check-opt"><input type="checkbox" id="dsFrames" />
+            Remove frames <small>(keep every 2nd frame)</small></label>
+          <label class="check-opt"><input type="checkbox" id="dsQuality" />
+            Lower quality <small>(smaller color palette)</small></label>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goDownsizing" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Format Convert -->
+        <div class="tool-view" id="view-convert" hidden>
+          <h3 class="panel-title">🔄 Format Convert</h3>
+          <p class="tool-hint">Converted files are downloaded directly and do not change the current GIF.</p>
+          <button class="btn-convert" id="convVideo" type="button">🎥 Convert to Video (MP4/WebM)</button>
+          <button class="btn-convert" id="convJpg" type="button">🖼️ Convert to JPG (first frame)</button>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+          </div>
+        </div>
+
+        <!-- Rotate -->
+        <div class="tool-view" id="view-rotate" hidden>
+          <h3 class="panel-title">🔃 Rotate / Flip</h3>
+          <div class="rotate-grid" id="rotateGrid">
+            <button class="ratio-btn active" data-rot="90" type="button">↻ 90°</button>
+            <button class="ratio-btn" data-rot="180" type="button">↻ 180°</button>
+            <button class="ratio-btn" data-rot="270" type="button">↻ 270°</button>
+            <button class="ratio-btn" data-rot="flipH" type="button">↔ Flip H</button>
+            <button class="ratio-btn" data-rot="flipV" type="button">↕ Flip V</button>
+          </div>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goRotate" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Optimize -->
+        <div class="tool-view" id="view-optimize" hidden>
+          <h3 class="panel-title">⚡ Optimize</h3>
+          <p class="tool-hint">Re-encodes the GIF with an efficient color palette to reduce
+            file size while keeping the same resolution, frame count and speed.</p>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goOptimize" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Reverse -->
+        <div class="tool-view" id="view-reverse" hidden>
+          <h3 class="panel-title">⏪ Reverse</h3>
+          <p class="tool-hint">Plays the animation backwards — last frame first.</p>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goReverse" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Speed -->
+        <div class="tool-view" id="view-speed" hidden>
+          <h3 class="panel-title">🐇 Speed</h3>
+          <div class="slider-row">
+            <span class="axis-ico">🐢</span>
+            <input type="range" id="speedSlider" class="slider" min="25" max="400" step="25" value="100" />
+            <span class="axis-ico">🐇</span>
+          </div>
+          <p class="tool-hint" id="speedShow">1.00× (same speed)</p>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goSpeed" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Cut -->
+        <div class="tool-view" id="view-cut" hidden>
+          <h3 class="panel-title">🎬 Cut</h3>
+          <div class="slider-row">
+            <span class="axis-ico">Start</span>
+            <input type="range" id="cutStart" class="slider" min="1" value="1" />
+            <span class="slider-val" id="cutStartVal">1</span>
+          </div>
+          <div class="slider-row">
+            <span class="axis-ico">End</span>
+            <input type="range" id="cutEnd" class="slider" min="1" value="1" />
+            <span class="slider-val" id="cutEndVal">1</span>
+          </div>
+          <p class="tool-hint" id="cutShow">—</p>
+          <div class="tool-actions">
+            <button class="btn-back" data-back type="button">◀ Back</button>
+            <button class="btn-go" id="goCut" type="button">Go! 🚀</button>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-wrap" id="progressWrap" hidden>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <p class="progress-text" id="progressText">Working…</p>
+        </div>
+
+      </div><!-- /tools-panel -->
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <p>Smart GIF Studio · All processing happens in your browser 🔒 · <a href="https://nanalab.kr">nanalab.kr</a></p>
+</footer>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gifuct-js@2.1.2/dist/gifuct-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
