@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video to GIF — 나나컴퍼니</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <a class="logo-link" href="https://nanalab.kr" target="_blank" rel="noopener" aria-label="나나컴퍼니 홈으로">
+      <img class="logo-img" src="./logo.png" alt="나나컴퍼니 로고" />
+      <span class="logo-fallback" hidden>🐕 나나컴퍼니</span>
+    </a>
+    <h1 class="site-title">Video <span class="accent">to</span> GIF</h1>
+  </header>
+
+  <main class="main">
+    <!-- 히어로 문구 -->
+    <section class="hero">
+      <h2 class="hero-title">Video <span class="arrow">→</span> GIF</h2>
+      <p class="hero-sub">Make your own GIF Animation!</p>
+    </section>
+
+    <!-- 드롭존 -->
+    <section class="dropzone" id="dropzone">
+      <div class="dz-icon" aria-hidden="true">🎞️</div>
+      <p class="dz-text">동영상을 여기에 끌어다 놓으세요</p>
+      <p class="dz-or">또는</p>
+      <button class="btn btn-primary" id="pickBtn" type="button">📂 파일 선택</button>
+      <input type="file" id="fileInput" accept="video/*" multiple hidden />
+      <p class="dz-hint">MP4 · WebM · MOV 등 브라우저가 재생 가능한 동영상 (최대 29 FPS 제한)</p>
+    </section>
+
+    <!-- 변환 옵션 -->
+    <section class="options" id="options">
+      <div class="opt-group">
+        <span class="opt-label">🎬 프레임 (FPS)</span>
+        <div class="chips" id="fpsChips">
+          <button class="chip" data-fps="5" type="button">5</button>
+          <button class="chip active" data-fps="10" type="button">10</button>
+          <button class="chip" data-fps="15" type="button">15</button>
+          <button class="chip" data-fps="24" type="button">24</button>
+          <button class="chip" data-fps="29" type="button">29 (최대)</button>
+        </div>
+      </div>
+      <div class="opt-group">
+        <span class="opt-label">📐 출력 크기 (가로)</span>
+        <div class="chips" id="widthChips">
+          <button class="chip" data-width="320" type="button">320px</button>
+          <button class="chip active" data-width="480" type="button">480px</button>
+          <button class="chip" data-width="640" type="button">640px</button>
+        </div>
+      </div>
+      <p class="opt-hint">💡 FPS와 크기가 클수록 화질은 좋아지지만 파일이 커지고 변환이 오래 걸려요. (30초 초과분은 잘립니다)</p>
+    </section>
+
+    <!-- 파일 목록 -->
+    <section class="file-section" id="fileSection" hidden>
+      <h3 class="list-title">변환 목록</h3>
+      <ul class="file-list" id="fileList"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>🔒 모든 변환은 브라우저 안에서만 처리되며, 파일이 서버로 전송되지 않습니다.</p>
+    <p class="copy">© 나나컴퍼니 · Video to GIF</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
