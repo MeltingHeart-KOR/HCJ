@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e1320" />
+  <title>📝 TextRank 문서 요약기</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- 문서 해석은 전부 브라우저 안에서 (파일은 어디로도 전송되지 않음) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- ===== 헤더 ===== -->
+    <header class="hero">
+      <h1 class="hero-title">📝 문서 요약기</h1>
+      <p class="hero-sub">PDF · DOCX를 올리면 <strong>TextRank</strong>가 요점만 뽑아드립니다</p>
+      <p class="hero-privacy">🔒 파일은 서버로 전송되지 않고 브라우저 안에서만 분석됩니다</p>
+    </header>
+
+    <!-- ===== 업로드 ===== -->
+    <section class="card" id="uploadCard">
+      <label class="dropzone" id="dropzone" for="fileInput">
+        <div class="dz-icon" id="dzIcon">📄</div>
+        <div class="dz-title" id="dzTitle">탭해서 파일 선택 <span class="dz-or">또는</span> 드래그 &amp; 드롭</div>
+        <div class="dz-hint">PDF · DOCX 지원</div>
+        <input type="file" id="fileInput" accept=".pdf,.docx" hidden />
+      </label>
+
+      <div class="progress hidden" id="progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">분석 중…</div>
+      </div>
+
+      <div class="error hidden" id="errorBox"></div>
+    </section>
+
+    <!-- ===== 결과 ===== -->
+    <section class="hidden" id="resultArea">
+
+      <!-- 파일 정보 + 통계 -->
+      <div class="card">
+        <div class="file-row">
+          <span class="file-badge" id="fileBadge">PDF</span>
+          <span class="file-name" id="fileName">문서.pdf</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-num" id="statSent">0</div><div class="stat-label">전체 문장</div></div>
+          <div class="stat"><div class="stat-num" id="statChar">0</div><div class="stat-label">글자 수</div></div>
+          <div class="stat"><div class="stat-num" id="statCompress">0%</div><div class="stat-label">압축률</div></div>
+        </div>
+      </div>
+
+      <!-- 슬라이더 -->
+      <div class="card slider-card">
+        <div class="slider-head">
+          <span class="slider-title">요약 분량</span>
+          <span class="slider-value"><b id="sentCount">3</b> 문장</span>
+        </div>
+        <input type="range" id="lenSlider" min="1" max="5" step="1" value="3" />
+        <div class="slider-ticks">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+        </div>
+      </div>
+
+      <!-- 요약 결과 -->
+      <div class="card">
+        <div class="summary-head">
+          <h2 class="section-title">✨ 요약 결과</h2>
+          <button class="btn-small" id="copyBtn">📋 복사</button>
+        </div>
+        <div id="summaryList"></div>
+      </div>
+
+      <!-- 원문 미리보기 -->
+      <details class="card preview-card">
+        <summary class="preview-summary">📖 추출된 원문 미리보기</summary>
+        <div class="preview-text" id="previewText"></div>
+      </details>
+
+      <button class="btn-primary" id="resetBtn">🔄 다른 문서 분석하기</button>
+    </section>
+
+    <footer class="foot">TextRank · 문장 유사도 그래프 + PageRank 기반 추출 요약</footer>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="textrank.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

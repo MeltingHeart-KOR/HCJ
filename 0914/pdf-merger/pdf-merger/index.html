@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>📎 PDF 병합기 — 여러 PDF를 하나로</title>
+<link rel="stylesheet" href="style.css" />
+<!-- PDF 병합 라이브러리 (브라우저 내 처리, 파일 전송 없음) -->
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-icon">📎</div>
+  <h1>PDF 병합기</h1>
+  <p class="hero-sub">여러 PDF를 순서대로 하나로 합칩니다.<br />
+  <span class="secure">🔒 파일은 서버로 전송되지 않고 브라우저 안에서만 처리됩니다</span></p>
+</header>
+
+<main>
+  <!-- 업로드 영역 -->
+  <section id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="PDF 파일 선택 또는 드래그">
+    <div class="drop-icon">📄</div>
+    <p class="drop-title">여기를 탭해서 PDF 선택</p>
+    <p class="drop-sub">또는 파일을 드래그해서 놓기 (여러 개 가능)</p>
+    <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden />
+  </section>
+
+  <!-- 파일 목록 -->
+  <section id="listSection" class="list-section hidden">
+    <div class="list-header">
+      <h2>병합 순서 <span id="fileCount" class="count-chip">0개</span></h2>
+      <button type="button" id="clearBtn" class="ghost-btn">🗑 전체 비우기</button>
+    </div>
+    <p class="list-hint">▲▼ 버튼으로 순서를 바꿀 수 있습니다. 위에서 아래 순서로 병합됩니다.</p>
+    <ul id="fileList" class="file-list"></ul>
+
+    <div class="total-row">
+      <span>총 <strong id="totalPages">0</strong>페이지 · <strong id="totalSize">0 KB</strong></span>
+    </div>
+
+    <label class="name-row">
+      <span>저장 파일명</span>
+      <input type="text" id="outputName" value="merged" maxlength="60" />
+      <span class="ext">.pdf</span>
+    </label>
+
+    <button type="button" id="mergeBtn" class="merge-btn" disabled>📎 PDF 병합하기</button>
+
+    <div id="progressWrap" class="progress-wrap hidden">
+      <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      <p id="progressText" class="progress-text">준비 중…</p>
+    </div>
+  </section>
+
+  <!-- 결과 -->
+  <section id="resultSection" class="result-section hidden">
+    <div class="result-icon">✅</div>
+    <h2>병합 완료!</h2>
+    <p id="resultInfo" class="result-info"></p>
+    <a id="downloadLink" class="download-btn" download="merged.pdf">⬇️ 병합된 PDF 다운로드</a>
+    <button type="button" id="restartBtn" class="ghost-btn">↺ 새로 병합하기</button>
+  </section>
+</main>
+
+<footer class="foot">모든 처리는 이 기기 안에서만 이루어집니다.</footer>
+
+<div id="toast" class="toast" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

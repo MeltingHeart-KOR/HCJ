@@ -1,0 +1,209 @@
+/* ═══════════════════════════════════════════
+   📄 문서 분석기 — 모바일 우선 스타일
+   ═══════════════════════════════════════════ */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --card2: #273449;
+  --line: #334155;
+  --text: #e2e8f0;
+  --dim: #94a3b8;
+  --accent: #38bdf8;
+  --accent2: #818cf8;
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --err: #f87171;
+}
+
+html { font-size: 16px; }
+body {
+  background: linear-gradient(180deg, #0f172a 0%, #131c33 100%);
+  color: var(--text);
+  font-family: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.container { max-width: 480px; margin: 0 auto; padding: 0 16px 40px; }
+
+/* ═══ 헤더 ═══ */
+.header { text-align: center; padding: 32px 16px 20px; }
+.title { font-size: 1.7rem; letter-spacing: -0.5px; }
+.subtitle { color: var(--dim); font-size: 0.9rem; margin-top: 6px; }
+.privacy {
+  display: inline-block; margin-top: 12px;
+  font-size: 0.78rem; color: var(--ok);
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  padding: 5px 12px; border-radius: 999px;
+}
+.privacy b { font-weight: 700; }
+
+/* ═══ 업로드 영역 ═══ */
+.drop-zone {
+  border: 2px dashed var(--line);
+  border-radius: 20px;
+  background: var(--card);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.25s, background 0.25s, transform 0.15s;
+  min-height: 200px;
+  display: flex; align-items: center; justify-content: center;
+}
+.drop-zone:active { transform: scale(0.98); }
+.drop-zone.dragover {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.08);
+}
+.drop-icon { font-size: 3rem; animation: float 2.5s ease-in-out infinite; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.drop-text { margin-top: 12px; line-height: 1.6; }
+.drop-text b { color: var(--accent); }
+.drop-hint { margin-top: 10px; font-size: 0.82rem; color: var(--dim); }
+.badge {
+  display: inline-block;
+  background: var(--card2); border: 1px solid var(--line);
+  padding: 2px 10px; border-radius: 8px;
+  font-family: monospace; font-size: 0.8rem;
+}
+
+/* ═══ 진행 상태 ═══ */
+.progress-box {
+  margin-top: 20px; padding: 28px 20px;
+  background: var(--card); border-radius: 20px;
+  text-align: center;
+}
+.spinner {
+  width: 36px; height: 36px; margin: 0 auto 14px;
+  border: 4px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.progress-bar {
+  margin-top: 14px; height: 8px;
+  background: var(--line); border-radius: 999px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+/* ═══ 오류 ═══ */
+.error-box {
+  margin-top: 20px; padding: 18px;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: 16px;
+  color: var(--err); text-align: center;
+  font-size: 0.92rem; line-height: 1.6;
+}
+
+/* ═══ 결과 ═══ */
+.result-box { margin-top: 20px; animation: rise 0.45s ease both; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+.file-info {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--card); border-radius: 16px;
+  padding: 14px 16px; margin-bottom: 14px;
+}
+.file-icon { font-size: 2rem; }
+.file-name {
+  font-weight: 700; font-size: 0.95rem;
+  word-break: break-all;
+}
+.file-detail { color: var(--dim); font-size: 0.8rem; margin-top: 2px; }
+
+/* 4대 지표 */
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.stat-card {
+  background: var(--card); border-radius: 16px;
+  padding: 18px 14px; text-align: center;
+  border: 1px solid var(--line);
+}
+.stat-card.main {
+  background: linear-gradient(145deg, #1c2f4a, #1e293b);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+.stat-label { font-size: 0.8rem; color: var(--dim); }
+.stat-label small { font-size: 0.68rem; }
+.stat-value {
+  font-size: 1.9rem; font-weight: 800; margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.stat-card:not(.main) .stat-value { color: var(--text); font-size: 1.6rem; }
+.stat-value.bump { animation: bump 0.3s ease; }
+@keyframes bump {
+  40% { transform: scale(1.15); }
+}
+
+/* 세부 지표 */
+.sub-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  margin-top: 10px;
+}
+.sub-card {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--card); border-radius: 12px;
+  padding: 12px 14px; font-size: 0.85rem;
+}
+.sub-card span { color: var(--dim); }
+.sub-card b { font-variant-numeric: tabular-nums; }
+
+/* 미리보기 */
+.preview-box {
+  margin-top: 14px;
+  background: var(--card); border-radius: 16px;
+  padding: 14px 16px;
+}
+.preview-box summary {
+  cursor: pointer; font-size: 0.9rem; font-weight: 600;
+  min-height: 32px; display: flex; align-items: center;
+}
+.preview-box pre {
+  margin-top: 10px; padding: 12px;
+  background: #0b1120; border-radius: 10px;
+  font-size: 0.78rem; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-all;
+  max-height: 240px; overflow-y: auto;
+  color: var(--dim);
+}
+
+/* 리셋 버튼 */
+.btn-reset {
+  width: 100%; margin-top: 18px;
+  padding: 16px; min-height: 52px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  color: #0f172a; font-weight: 800; font-size: 1rem;
+  border: none; border-radius: 16px; cursor: pointer;
+  transition: transform 0.15s, filter 0.2s;
+}
+.btn-reset:active { transform: scale(0.97); filter: brightness(1.15); }
+
+/* ═══ 푸터 ═══ */
+.footer {
+  text-align: center; padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  color: #475569; font-size: 0.72rem;
+}
+
+.hidden { display: none !important; }
+
+/* 모션 최소화 대응 */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
