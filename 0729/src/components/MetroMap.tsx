@@ -118,7 +118,7 @@ export default function MetroMap({ className }: { className?: string }) {
 
       {/* stations — clickable links to each station page */}
       <g fontFamily="sans-serif" fontSize="14" fill={INK}>
-        <StationLink href="/pages/oncheonjang.html">
+        <StationLink href="./pages/oncheonjang.html">
           <circle cx="227.5" cy="209.5" r="7" fill={PINK_BG} stroke={LINE1} strokeWidth="3.5" />
           <text x="196" y="188" textAnchor="end" fontWeight="700">
             温泉場
@@ -128,7 +128,7 @@ export default function MetroMap({ className }: { className?: string }) {
           </text>
         </StationLink>
 
-        <StationLink href="/pages/gwangan.html">
+        <StationLink href="./pages/gwangan.html">
           <circle cx="452.5" cy="209.5" r="7" fill={PINK_BG} stroke={LINE2} strokeWidth="3.5" />
           <text x="472" y="188" fontWeight="700">
             広安
@@ -138,7 +138,7 @@ export default function MetroMap({ className }: { className?: string }) {
           </text>
         </StationLink>
 
-        <StationLink href="/pages/jeonpo.html">
+        <StationLink href="./pages/jeonpo.html">
           <circle cx="430" cy="668" r="6.5" fill={PINK_BG} stroke={LINE2} strokeWidth="3.5" />
           <text x="450" y="666" fontWeight="700">
             田浦
@@ -148,7 +148,7 @@ export default function MetroMap({ className }: { className?: string }) {
           </text>
         </StationLink>
 
-        <StationLink href="/pages/seomyeon.html">
+        <StationLink href="./pages/seomyeon.html">
           <circle cx="340" cy="640" r="10" fill={PINK_BG} stroke={INK} strokeWidth="3.5" />
           <circle cx="340" cy="640" r="4.5" fill={INK} />
           <text x="306" y="662" textAnchor="end" fontWeight="700">
@@ -159,7 +159,7 @@ export default function MetroMap({ className }: { className?: string }) {
           </text>
         </StationLink>
 
-        <StationLink href="/pages/busan-station.html">
+        <StationLink href="./pages/busan-station.html">
           <circle cx="400" cy="730" r="6.5" fill={PINK_BG} stroke={LINE1} strokeWidth="3.5" />
           <text x="422" y="728" fontWeight="700">
             釜山駅
@@ -169,7 +169,7 @@ export default function MetroMap({ className }: { className?: string }) {
           </text>
         </StationLink>
 
-        <StationLink href="/pages/nampo.html">
+        <StationLink href="./pages/nampo.html">
           <circle cx="345" cy="830" r="6.5" fill={PINK_BG} stroke={LINE1} strokeWidth="3.5" />
           <text x="320" y="860" textAnchor="middle" fontWeight="700">
             南浦
